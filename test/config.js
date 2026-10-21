@@ -1,0 +1,13 @@
+module.exports = {
+  '000-one.html': { start: [{ click: [500, 600] }, { move: [500, 500] }], after: [{ move: [500, 100] }], dropAt: [500, 600] },
+  '001-key.html': { start: [{ key: 'Space' }], after: [{ keydown: 'Space' }, { wait: 900 }, { keyup: 'Space' }] },
+  '002-move.html': { start: [{ move: [500, 300] }, { click: [500, 300] }], after: [{ move: [800, 500] }] },
+  '003-knob.html': { start: [{ move: [500, 330] }, { down: 1 }, { move: [500, 250] }, { up: 1 }], after: [{ move: [500, 330] }, { down: 1 }, { move: [500, 180] }, { up: 1 }] },
+  '004-type.html': { start: [{ click: [500, 300] }, { key: 'Enter' }], after: [{ fill: ['#t', 'a-b-ABqr * ~ cdcd'] }] },
+  '005-keys.html': { start: [{ key: 'Space' }], after: [{ key: '3' }, { key: 'w' }, { key: 'h' }, { key: 'v' }, { key: 'm' }, { key: 'n' }] },
+  '006-1k.html': { start: [{ click: [500, 400] }, { move: [400, 300] }], after: [{ move: [600, 100] }], input: '#f', noAiff: true },
+  '007-drift.html': { start: [{ click: [500, 350] }], after: [{ wait: 4500 }] },
+  '008-two.html': { start: [{ click: [500, 350] }, { move: [300, 300] }], after: [{ move: [800, 500] }], dropAt: [200, 350] },
+  '009-grain.html': { start: [{ move: [400, 300] }, { click: [400, 300] }], after: [{ down: 1 }, { move: [600, 200] }, { wait: 400 }, { up: 1 }] },
+  '010-oblique.html': { start: [{ click: [500, 350] }], after: [{ click: [500, 350] }, { click: [500, 350] }] },
+};
