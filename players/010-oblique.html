@@ -1,0 +1,38 @@
+<!doctype html><meta charset=utf-8><title>010 · oblique</title>
+<style>html{height:100%;background:#eee;color:#111;font:italic 30px Georgia,serif;cursor:pointer;user-select:none}body{margin:0;height:100%;display:grid;place-items:center;align-content:center;text-align:center}
+#c{max-width:70vw;transition:opacity .6s}small{display:block;font:12px monospace;color:#888;margin-top:16px}</style>
+<div id=c>click to draw a card</div><small id=w>a new card every 4 loops · click to draw now · drop a sound</small>
+<script>
+// The loop is played by a deck of cards. Each card (after Eno & Schmidt's Oblique Strategies) is a concrete, audible instruction.
+const A=new AudioContext(),R=A.sampleRate,N=(t,...a)=>a.reduce((n,b)=>(n.connect(b),b),t);
+let buf=A.createBuffer(1,R*2,R),fwd,src,on=0,loops=0,wait=4,hist=[];
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+fwd=buf;const ir=A.createBuffer(2,R*4,R);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length)**3}
+const cr=new Float32Array(4096).map((_,i)=>Math.round((i/2048-1)*5)/5);
+const vol=A.createGain(),ws=A.createWaveShaper(),bq=A.createBiquadFilter(),dl=A.createDelay(2),fb=A.createGain(),ds=A.createGain(),rv=A.createConvolver(),rs=A.createGain();
+rv.buffer=ir;dl.delayTime.value=.375;N(vol,ws,bq,A.destination);N(bq,ds,dl,fb,dl,A.destination);N(bq,rs,rv,A.destination);
+const D={rev:0,crush:0,len:1,start:0,rate:1,cut:2e4,hp:0,echo:0,fbk:.3,room:0,mute:0};let S={...D};
+const flip=b=>{const r=A.createBuffer(b.numberOfChannels,b.length,b.sampleRate);for(let c=0;c<b.numberOfChannels;c++)r.getChannelData(c).set(b.getChannelData(c).slice().reverse());return r};
+const CARDS=[["Use an old idea",s=>hist.length?{...hist[Math.random()*hist.length|0]}:s,"back to an earlier state"],
+["Reverse",s=>({...s,rev:1-s.rev}),"the loop flips"],["Emphasise the flaws",s=>({...s,crush:1}),"bit-crushed"],
+["Repetition is a form of change",s=>({...s,len:s.len>.13?s.len/2:1}),"the loop halves"],["Do nothing for as long as possible",s=>(wait=12,s),"nothing changes for 12 loops"],
+["Honour thy error as a hidden intention",s=>({...s,start:Math.random()*.75}),"the loop jumps somewhere else"],
+["Remove specifics and convert to ambiguities",s=>({...s,cut:600,room:.9}),"darker, further away"],["Turn it upside down",s=>({...s,rate:s.rate==1?.5:s.rate==.5?2:1}),"octave shift"],
+["Only one element of each kind",s=>({...s,hp:1,echo:0,room:0,crush:0}),"thinned out, dry"],["Go slowly all the way round the outside",s=>({...s,rate:.75,echo:.6}),"slower, echoing"],
+["Mute and continue",s=>({...s,mute:1}),"silence for one loop"],["Discard an axiom",s=>({...D}),"everything reset"],
+["Accretion",s=>({...s,echo:Math.min(.8,s.echo+.25),fbk:Math.min(.85,s.fbk+.15)}),"the echoes pile up"],["Water",s=>({...s,cut:1500,room:.6,echo:.3}),"liquid"]];
+function apply(){const t=A.currentTime,L=buf.duration;if(src){src.playbackRate.setTargetAtTime(S.rate,t,.05);src.loopStart=S.start*L;src.loopEnd=Math.min(L,(S.start+S.len)*L)}
+ws.curve=S.crush?cr:null;bq.type=S.hp?'highpass':'lowpass';bq.frequency.setTargetAtTime(S.hp?900:S.cut,t,.1);ds.gain.setTargetAtTime(S.echo,t,.1);fb.gain.setTargetAtTime(S.fbk,t,.1);
+rs.gain.setTargetAtTime(S.room,t,.3);vol.gain.setTargetAtTime(S.mute?0:1,t,.05)}
+function play(){if(src)src.stop();src=null;if(!on)return;buf=S.rev?flip(fwd):fwd;src=A.createBufferSource();src.buffer=buf;src.loop=true;src.connect(vol);apply();src.start(0,src.loopStart)}
+function draw(first){const deck=first?CARDS.filter(c=>c[0]!='Mute and continue'):CARDS,[txt,fn,what]=deck[Math.random()*deck.length|0],was=S.rev;hist.push(S);S=fn(S);c.style.opacity=0;setTimeout(()=>{c.textContent=txt;w.textContent='→ '+what;c.style.opacity=1},300);
+if(S.rev!=was)play();else apply()}
+setInterval(()=>{if(!on)return;const t=(S.len*buf.duration)/S.rate;if(A.currentTime-loopT>=t){loopT=A.currentTime;if(S.mute){S={...S,mute:0};apply()}if(++loops>=wait){loops=0;wait=4;draw()}}},20);let loopT=0;
+onclick=()=>{A.resume();const first=!on;if(first){on=1;loopT=A.currentTime;play()}draw(first)};
+async function load(f){const b=await f.arrayBuffer();try{fwd=await A.decodeAudioData(b.slice(0))}catch(e){fwd=aiff(b)}A.resume();on=1;loopT=A.currentTime;S={...S,rev:0,mute:0};play()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>
