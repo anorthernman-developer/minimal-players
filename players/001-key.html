@@ -1,0 +1,24 @@
+<!doctype html><meta charset=utf-8><title>001 · key</title>
+<style>html{height:100%;background:#000;color:#eee;font:13px monospace}body{margin:0;height:100%;display:grid;place-items:center}#o{width:8px;height:8px;border-radius:50%;background:#444;transition:all .4s}</style>
+<div id=o title="space: tap = play/stop · hold = throw · drop a sound"></div>
+<script>
+// One key. Space: tap toggles the loop, hold throws it into a dub delay + reverb that swells while held.
+const A=new AudioContext(),R=A.sampleRate,N=(t,...a)=>a.reduce((n,b)=>(n.connect(b),b),t);
+let buf=A.createBuffer(1,R*2,R),src,on=0,down=0;
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+const ir=A.createBuffer(2,R*4,R);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length)**3}
+const lp=A.createBiquadFilter(),vol=A.createGain(),dl=A.createDelay(2),fb=A.createGain(),ds=A.createGain(),rv=A.createConvolver(),rs=A.createGain();
+rv.buffer=ir;dl.delayTime.value=.375;N(lp,vol,A.destination);N(lp,ds,dl,fb,dl,A.destination);N(dl,rs,rv,A.destination);N(lp,rs);
+const ramp=(p,v,s)=>p.setTargetAtTime(v,A.currentTime,s);ramp(ds.gain,0,.01);ramp(fb.gain,.3,.01);ramp(rs.gain,.05,.01);
+function play(){if(src)src.stop();src=null;if(!on)return;src=A.createBufferSource();src.buffer=buf;src.loop=true;src.connect(lp);src.start()}
+function throwIn(x){ramp(ds.gain,x?.9:0,x?.3:.05);ramp(fb.gain,x?.8:.3,x?1:.2);ramp(rs.gain,x?.6:.05,x?1.5:2);ramp(lp.frequency,x?700:18000,x?1.2:.4);ramp(vol.gain,x?.35:1,x?.8:.2);
+o.style.cssText=x?'width:60vmin;height:60vmin;background:#123':on?'background:#eee':''}
+onkeydown=e=>{if(e.code!='Space'||e.repeat)return;e.preventDefault();A.resume();down=performance.now();setTimeout(()=>{if(down)throwIn(1)},220)};
+onkeyup=e=>{if(e.code!='Space')return;const held=performance.now()-down>220;down=0;if(held)throwIn(0);else{on^=1;play();throwIn(0)}};
+async function load(f){const b=await f.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}play()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();A.resume();on=1;load(e.dataTransfer.files[0]).then(()=>throwIn(0))};
+</script>
