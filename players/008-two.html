@@ -1,0 +1,27 @@
+<!doctype html><meta charset=utf-8><title>008 · two</title>
+<style>html{height:100%;background:linear-gradient(90deg,hsl(20 70% calc(var(--a,1)*35%)),hsl(200 70% calc(var(--b,0)*35%)));color:#fff8;font:13px monospace;cursor:ew-resize;user-select:none}
+body{margin:0;height:100%;display:flex;justify-content:space-between;align-items:center;padding:0 3vw;box-sizing:border-box}label{font-size:48px;cursor:pointer}p{text-align:center}</style>
+<label for=fa>A</label><p>click to play · move left/right to cross over · up/down for space<br>drop a sound on either half, or click A / B</p><label for=fb>B</label>
+<input type=file id=fa accept="audio/*,.aif,.aiff" hidden><input type=file id=fb accept="audio/*,.aif,.aiff" hidden>
+<script>
+// Two loops, one gesture. B is varispeeded so its loop length matches A (nearest power-of-two ratio), so they always stay in phase.
+const A=new AudioContext(),R=A.sampleRate,N=(t,...a)=>a.reduce((n,b)=>(n.connect(b),b),t),de=document.documentElement.style;
+let bufs=[A.createBuffer(1,R*2,R),A.createBuffer(1,R*4,R)],src=[],on=0;
+{let buf=bufs[0];{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}}
+{const d=bufs[1].getChannelData(0);for(let i=0;i<d.length;i++){const t=i/R;d[i]=.15*[110,165,131,98].reduce((s,f,j)=>s+Math.sin(6.283*f*(j%2?1.003:1)*t+j)*(.6+.4*Math.sin(6.283*t/4+j)),0)*Math.min(1,t*8,(4-t)*8)}}
+const ir=A.createBuffer(2,R*3,R);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length)**4}
+const ga=A.createGain(),gb=A.createGain(),lp=A.createBiquadFilter(),dl=A.createDelay(2),fbk=A.createGain(),ds=A.createGain(),rv=A.createConvolver(),rs=A.createGain();
+rv.buffer=ir;dl.delayTime.value=.375;N(ga,lp);N(gb,lp,A.destination);N(lp,ds,dl,fbk,dl,A.destination);N(lp,rs,rv,A.destination);
+const T=(p,v)=>p.setTargetAtTime(v,A.currentTime,.05);
+function mix(x,y){T(ga.gain,Math.cos(x*Math.PI/2));T(gb.gain,Math.sin(x*Math.PI/2));de.setProperty('--a',Math.cos(x*Math.PI/2));de.setProperty('--b',Math.sin(x*Math.PI/2));
+T(lp.frequency,18000*.03**y);T(ds.gain,.6*y);T(fbk.gain,.2+.5*y);T(rs.gain,.9*y)}
+function play(){src.forEach(s=>s.stop());src=[];if(!on)return;const t=A.currentTime+.05,la=bufs[0].duration,r=bufs[1].duration/la,rb=r/2**Math.round(Math.log2(r));
+bufs.forEach((b,i)=>{const s=A.createBufferSource();s.buffer=b;s.loop=true;s.playbackRate.value=i?rb:1;s.connect(i?gb:ga);s.start(t);src.push(s)})}
+onclick=e=>{if(e.target.tagName=='LABEL'||e.target.type=='file')return;A.resume();on^=1;play()};onpointermove=e=>mix(e.clientX/innerWidth,e.clientY/innerHeight);mix(0,0);
+async function load(f,i){const b=await f.arrayBuffer();try{bufs[i]=await A.decodeAudioData(b.slice(0))}catch(e){bufs[i]=aiff(b)}A.resume();on=1;play()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0],+(e.clientX>innerWidth/2))};fa.onchange=()=>load(fa.files[0],0);fb.onchange=()=>load(fb.files[0],1);
+</script>
