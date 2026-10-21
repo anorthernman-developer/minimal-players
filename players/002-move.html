@@ -1,0 +1,22 @@
+<!doctype html><meta charset=utf-8><title>002 · move</title>
+<style>html{height:100%;--x:50%;--y:50%;--h:200;background:radial-gradient(circle at var(--x) var(--y),hsl(var(--h) 80% 40%),#000 30%);cursor:none}body{margin:0;height:100%}</style>
+<script>
+// No UI. The pointer is the instrument: X = tape speed (snapped to semitones), Y = filter. Leave the window and it fades out.
+// The browser needs one click before it will make a sound. Drop a sample anywhere.
+const A=new AudioContext(),R=A.sampleRate,s=document.documentElement.style;
+let buf=A.createBuffer(1,R*2,R),src,rate=1;
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+const L=A.createDynamicsCompressor(),lp=A.createBiquadFilter(),g=A.createGain(),dl=A.createDelay(),fb=A.createGain();lp.Q.value=2.5;dl.delayTime.value=.25;fb.gain.value=.3;
+L.connect(A.destination);lp.connect(g).connect(L);g.connect(dl).connect(fb).connect(dl).connect(L);g.gain.value=0;
+function play(){if(src)src.stop();src=A.createBufferSource();src.buffer=buf;src.loop=true;src.playbackRate.value=rate;src.connect(lp);src.start()}
+onpointerdown=()=>{A.resume();if(!src)play();g.gain.setTargetAtTime(1,A.currentTime,.1)};
+onpointermove=e=>{const x=e.clientX/innerWidth,y=e.clientY/innerHeight,t=A.currentTime;rate=2**(Math.round(x*24-12)/12);
+if(src)src.playbackRate.setTargetAtTime(rate,t,.02);lp.frequency.setTargetAtTime(15000*.01**y,t,.03);s.setProperty('--x',x*100+'%');s.setProperty('--y',y*100+'%');s.setProperty('--h',x*300|0)};
+document.onpointerleave=()=>g.gain.setTargetAtTime(0,A.currentTime,.5);document.onpointerenter=()=>src&&g.gain.setTargetAtTime(1,A.currentTime,.1);
+async function load(f){const b=await f.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}play();g.gain.setTargetAtTime(1,A.currentTime,.1)}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();A.resume();load(e.dataTransfer.files[0])};
+</script>
