@@ -1,0 +1,6 @@
+node_modules
+test/node_modules
+test/shot-*.png
+test/*.wav
+test/*.aif
+test/results-*.json
