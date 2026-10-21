@@ -1,0 +1,32 @@
+<!doctype html><meta charset=utf-8><title>009 · grain</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden;cursor:crosshair}canvas{display:block}p{position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#555;font:12px monospace;margin:0;pointer-events:none}</style>
+<canvas id=c></canvas><p>click to start · x = where in the sound · y = grain size · hold = scatter + shimmer · space = stop · drop a sound</p>
+<script>
+// Granular in under 100 lines: a cloud of short Hann-windowed grains read from one position in the sample.
+const A=new AudioContext(),R=A.sampleRate,N=(t,...a)=>a.reduce((n,b)=>(n.connect(b),b),t),X=c.getContext('2d');
+let buf=A.createBuffer(1,R*2,R),on=0,pos=.3,size=.12,hold=0,next=0,marks=[];
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+const ir=A.createBuffer(2,R*4,R);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length)**2.5}
+const bus=A.createGain(),rv=A.createConvolver(),rs=A.createGain();rv.buffer=ir;rs.gain.value=.5;bus.gain.value=.5;N(bus,A.destination);N(bus,rs,rv,A.destination);
+const hann=new Float32Array(64).map((_,i)=>Math.sin(Math.PI*i/63)**2);
+function grain(t){const sp=hold?.15:.01,p=Math.min(.999,Math.max(0,pos+(Math.random()-.5)*sp)),s=A.createBufferSource(),g=A.createGain();
+s.buffer=buf;s.playbackRate.value=hold&&Math.random()<.4?rnd([2,1.5,.5]):1;g.gain.value=0;g.gain.setValueCurveAtTime(hann,t,size);N(s,g,bus);
+s.start(t,p*buf.duration,size*s.playbackRate.value);marks.push([p,t])}
+const rnd=a=>a[Math.random()*a.length|0];
+function tick(){const gap=size/(hold?6:4);while(on&&next<A.currentTime+.1){grain(next);next+=gap*(.7+Math.random()*.6)}}
+setInterval(tick,20);
+function wave(){c.width=innerWidth;c.height=innerHeight;const d=buf.getChannelData(0),w=c.width,h=c.height,st=Math.max(1,d.length/w|0);X.fillStyle='#333';
+for(let x=0;x<w;x++){let m=0;for(let i=0;i<st;i+=8)m=Math.max(m,Math.abs(d[x*st+i]||0));X.fillRect(x,h/2-m*h/3,1,m*h/1.5+1)}base=X.getImageData(0,0,w,h)}
+let base;function frame(){if(base)X.putImageData(base,0,0);X.fillStyle='#fd4';const now=A.currentTime;marks=marks.filter(m=>now-m[1]<.4);
+for(const [p,t] of marks)X.fillRect(p*c.width,c.height*(1-size/.4)-6,2,12);X.fillStyle='#fff3';X.fillRect(pos*c.width-1,0,2,c.height);requestAnimationFrame(frame)}
+onresize=wave;wave();frame();
+onpointerdown=()=>{A.resume();if(!on){on=1;next=A.currentTime+.05}hold=1};onpointerup=()=>hold=0;
+onpointermove=e=>{pos=e.clientX/innerWidth;size=.02+.38*(1-e.clientY/innerHeight)};
+onkeydown=e=>{if(e.code=='Space'){e.preventDefault();on=0}};
+async function load(f){const b=await f.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}wave();A.resume();if(!on){on=1;next=A.currentTime+.05}}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>
