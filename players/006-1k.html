@@ -1,0 +1,7 @@
+<title>006 · 1k</title><body style=margin:0;height:100vh;background:#000 onclick=go()><input type=file id=f onchange=ld(this.files[0])><script>
+A=new AudioContext;R=A.sampleRate;B=A.createBuffer(1,R*2,R);D=B.getChannelData(0);for(i=0;i<R*2;i++)t=i/R,D[i]=Math.sin(t*[220,330,262,392][t*4&3]*6.28)*Math.exp(-9*(t%.25))/3+Math.sin(99*Math.sqrt(t%.5))*Math.exp(-8*(t%.5))/2
+F=A.createBiquadFilter();E=A.createDelay();G=A.createGain();G.gain.value=.5;F.connect(A.destination);F.connect(E).connect(G).connect(E);G.connect(A.destination);S=0
+go=_=>{A.resume();if(S)return;S=A.createBufferSource();S.buffer=B;S.loop=1;S.connect(F);S.start()}
+ld=f=>f.arrayBuffer().then(b=>A.decodeAudioData(b)).then(b=>{B=b;S&&S.stop();S=0;go()},_=>0)
+onmousemove=e=>{F.frequency.value=9e3*(1-e.clientY/innerHeight)+80;E.delayTime.value=e.clientX/innerWidth}
+</script>
