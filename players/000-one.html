@@ -1,0 +1,21 @@
+<!doctype html><meta charset=utf-8><title>000 · one</title>
+<style>html{height:100%;background:#000;color:#777;font:13px monospace;cursor:ns-resize;user-select:none}body{margin:0;height:100%;display:grid;place-items:center}label{cursor:pointer;text-decoration:underline}</style>
+<p>click · <label for=f>drop or pick a sound</label> · move up and down</p><input type=file id=f accept="audio/*,.aif,.aiff" hidden>
+<script>
+const A=new AudioContext(),R=A.sampleRate,N=(t,...a)=>a.reduce((n,b)=>(n.connect(b),b),t);
+let buf=A.createBuffer(1,R*2,R),src,on=0;
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+const ir=A.createBuffer(2,R*3,R);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length)**4}
+const lp=A.createBiquadFilter(),dl=A.createDelay(2),fb=A.createGain(),ds=A.createGain(),rv=A.createConvolver(),rs=A.createGain();
+rv.buffer=ir;dl.delayTime.value=.375;N(lp,A.destination);N(lp,ds,dl,fb,dl,A.destination);N(lp,rs,rv,A.destination);
+function set(v){const t=A.currentTime;lp.frequency.setTargetAtTime(18000*.02**v,t,.05);ds.gain.setTargetAtTime(v*.6,t,.05);fb.gain.setTargetAtTime(.2+.5*v,t,.05);rs.gain.setTargetAtTime(v*.9,t,.05)}
+function play(){if(src)src.stop();src=null;if(!on)return;src=A.createBufferSource();src.buffer=buf;src.loop=true;src.connect(lp);src.start()}
+async function load(f){const b=await f.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}play()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=='COMM'){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=='SSND')o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+onclick=e=>{if(e.target.tagName=='LABEL'||e.target.id=='f')return;A.resume();on^=1;play()};
+onpointermove=e=>set(e.clientY/innerHeight);set(0);
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();A.resume();on=1;load(e.dataTransfer.files[0])};f.onchange=()=>{A.resume();on=1;load(f.files[0])};
+</script>
