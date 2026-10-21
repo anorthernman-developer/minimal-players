@@ -1,0 +1,28 @@
+<!doctype html><meta charset=utf-8><title>004 · type</title>
+<style>html{height:100%;background:#f4f1ea;color:#222;font:16px Georgia,serif}body{margin:0;height:100%;display:grid;place-items:center;align-content:center}
+input{width:70vw;font:28px monospace;border:0;border-bottom:1px solid #222;background:none;outline:0;padding:8px}p{color:#888;font-size:13px;max-width:70vw}#now{font:20px monospace;color:#222;white-space:pre}b{color:#c22}</style>
+<input id=t value="abcd abcd a.c.ef~g* mmno" spellcheck=false autofocus><p id=now>press enter to play</p><p>the text is the score — a–p play sixteen slices of the loop, CAPITALS an octave up, q–z backwards, space or . rests, - holds, * throws to echo, ~ toggles the room. press enter to play/stop, drop a sound on the page.</p>
+<script>
+const A=new AudioContext(),R=A.sampleRate,N=(t,...a)=>a.reduce((n,b)=>(n.connect(b),b),t);
+let buf=A.createBuffer(1,R*2,R),rev,on=0,step=0,next=0,wash=0;
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+const ir=A.createBuffer(2,R*3,R);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length)**4}
+const bus=A.createGain(),dl=A.createDelay(2),fb=A.createGain(),ds=A.createGain(),rv=A.createConvolver(),rs=A.createGain();
+rv.buffer=ir;fb.gain.value=.5;ds.gain.value=0;rs.gain.value=0;N(bus,A.destination);N(bus,ds,dl,fb,dl,A.destination);N(bus,rs,rv,A.destination);
+function reverse(b){const r=A.createBuffer(b.numberOfChannels,b.length,b.sampleRate);for(let c=0;c<b.numberOfChannels;c++)r.getChannelData(c).set(b.getChannelData(c).slice().reverse());return r}rev=reverse(buf);
+function hit(ch,t,len){const sl=buf.duration/16,lo=ch.toLowerCase(),i=lo.charCodeAt(0)-97;if(i<0||i>25)return;
+const s=A.createBufferSource(),g=A.createGain(),back=i>15;s.buffer=back?rev:buf;s.playbackRate.value=ch!=lo?2:1;
+const off=back?buf.duration-((i-16)%16+1)*sl:i*sl;g.gain.setValueAtTime(1,t);g.gain.setTargetAtTime(0,t+len*.9,.005);N(s,g,bus);s.start(t,off,len*s.playbackRate.value+.02)}
+function tick(){const txt=t.value||'.',sl=buf.duration/16;while(on&&next<A.currentTime+.1){const ch=txt[step%txt.length];let len=sl,j=step+1;
+while(txt[j%txt.length]=='-'&&j-step<txt.length){len+=sl;j++}
+if(ch=='*'){ds.gain.setValueAtTime(.8,next);ds.gain.setTargetAtTime(0,next+sl,.05)}else if(ch=='~'){wash^=1;rs.gain.setTargetAtTime(wash*.7,next,.2)}else if(ch!='-')hit(ch,next,len);
+now.innerHTML=txt.slice(0,step%txt.length)+'<b>'+(ch==' '?'·':ch)+'</b>'+txt.slice(step%txt.length+1);next+=sl;step++}}
+setInterval(tick,25);
+t.onkeydown=e=>{if(e.key=='Enter'){A.resume();on^=1;next=A.currentTime+.05;step=0;if(!on)now.textContent='stopped — enter to play'}};
+async function load(f){const b=await f.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}rev=reverse(buf);A.resume();if(!on){on=1;next=A.currentTime+.05;step=0}}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>
