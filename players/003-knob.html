@@ -1,0 +1,27 @@
+<!doctype html><meta charset=utf-8><title>003 · knob</title>
+<style>html{height:100%;background:#111;font:12px monospace;color:#555}body{margin:0;height:100%;display:grid;place-items:center;align-content:center;gap:24px}
+#k{width:160px;height:160px;border-radius:50%;background:radial-gradient(#333,#1a1a1a);box-shadow:0 8px 30px #000,inset 0 1px 1px #444;cursor:ns-resize;position:relative;transform:rotate(calc(var(--v,0)*270deg - 135deg));touch-action:none}
+#k:after{content:"";position:absolute;left:78px;top:10px;width:4px;height:34px;border-radius:2px;background:#e33}</style>
+<div id=k></div><p>drag to turn · click to pick a sound · or drop one</p><input type=file id=f accept="audio/*,.aif,.aiff" hidden>
+<script>
+// One knob, one journey: off → clean → filtered → echoing → washed out and slowed down.
+const A=new AudioContext(),R=A.sampleRate,N=(t,...a)=>a.reduce((n,b)=>(n.connect(b),b),t);
+let buf=A.createBuffer(1,R*2,R),src,v=0,y0,v0,moved;
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+const ir=A.createBuffer(2,R*4,R);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length)**3}
+const vol=A.createGain(),lp=A.createBiquadFilter(),dl=A.createDelay(2),fb=A.createGain(),ds=A.createGain(),rv=A.createConvolver(),rs=A.createGain();
+rv.buffer=ir;dl.delayTime.value=.375;vol.gain.value=0;N(vol,lp,A.destination);N(lp,ds,dl,fb,dl,A.destination);N(lp,rs,rv,A.destination);
+const seg=(x,a,b)=>Math.min(1,Math.max(0,(x-a)/(b-a))),T=(p,x)=>p.setTargetAtTime(x,A.currentTime,.04);
+function set(x){v=x;k.style.setProperty('--v',x);T(vol.gain,seg(x,0,.12));T(lp.frequency,18000*.04**seg(x,.12,.5));T(lp.Q,1+8*seg(x,.12,.5)*(1-seg(x,.5,.8)));
+T(ds.gain,.7*seg(x,.45,.8));T(fb.gain,.25+.5*seg(x,.5,.9));T(rs.gain,1.2*seg(x,.75,1));if(src)T(src.playbackRate,1-.5*seg(x,.85,1))}
+function play(){if(src)src.stop();src=A.createBufferSource();src.buffer=buf;src.loop=true;src.connect(vol);src.start();set(v)}
+k.onpointerdown=e=>{A.resume();if(!src)play();y0=e.clientY;v0=v;moved=0;k.setPointerCapture(e.pointerId)};
+k.onpointermove=e=>{if(y0==null)return;const d=(y0-e.clientY)/200;if(Math.abs(d)>.01)moved=1;set(Math.min(1,Math.max(0,v0+d)))};
+k.onpointerup=()=>{y0=null;if(!moved)f.click()};
+async function load(file){const b=await file.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}play();if(v<.12)set(.3)}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();A.resume();load(e.dataTransfer.files[0])};f.onchange=()=>load(f.files[0]);
+</script>
