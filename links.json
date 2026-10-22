@@ -43,5 +43,13 @@
   "gist": "https://gist.github.com/anorthernman-developer/bc802e2f4f6108d361f935c970dd82a2",
   "issue": "https://github.com/anorthernman-developer/minimal-players/issues/12"
  },
- "intro": "https://github.com/anorthernman-developer/minimal-players/issues/1"
+ "intro": "https://github.com/anorthernman-developer/minimal-players/issues/1",
+ "011": {
+  "gist": "https://gist.github.com/anorthernman-developer/c7a307810dd782fff23b2b0b2fa7ec24",
+  "issue": "https://github.com/anorthernman-developer/minimal-players/issues/14"
+ },
+ "012": {
+  "gist": "https://gist.github.com/anorthernman-developer/93289cc623afb89425741b846fc950ae",
+  "issue": "https://github.com/anorthernman-developer/minimal-players/issues/15"
+ }
 }
