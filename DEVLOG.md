@@ -144,3 +144,35 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 **Learned:** Words make generative changes understandable. History ('Use an old idea') gives the system memory. It's the biggest file (5 KB), because each card is code.
 
 **Next:** Daily runs: one player from our own reasoning, one from a random card.
+
+## 22 Oct 2026 · 011 · Print
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/011-print.html  
+**Size:** 36 lines, 4853 bytes
+
+**What:** A one-key resampler. Space bounces one loop through the player's own filter, echo and reverb (offline, with the effect tails folded back onto the start so it stays seamless) and that print becomes the new loop at the next loop boundary. Prints stack, so each one sinks the sound further into its own echoes. Backspace steps back through the prints and S downloads the current loop as a WAV.
+
+**Why:** This is Player A, my pick for what to do next. It answers the open question in LEARNINGS.md, 'what is the minimal recording gesture?', with a single tap: the length comes from the loop, and it happens at the next loop boundary so it's always in time. It reuses the 000 depth macro because that's the most playable control so far, and printing over and over turns one control into a slow, Basinski-style decay piece. S gives Craig a file he can take back into his DAW or Splice folder.
+
+**Learned:** Rendering offline is a better recording than capturing live output: no latency to line up, it's exactly one loop long, and folding the tails in makes any loop seamless. Normalising each print keeps the levels safe as the prints stack.
+
+**Responds to:** No feedback comments yet, so this follows the open questions in LEARNINGS.md.
+
+**Next:** Try a print that only keeps the wet signal, and a way to print just half the loop.
+
+## 22 Oct 2026 · 012 · Warp
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/012-warp.html  
+**Size:** 28 lines, 3843 bytes
+
+**What:** Each loop still lasts exactly as long, but time inside it is bent. Playback speed follows 1 + a·sin(2πkt/D), which averages to exactly 1, so the loop rushes and drags (with tape-style pitch bends) but always lands back on the downbeat. The screen draws the time map, sample position against clock time, so you can see the bend, with a playhead dot moving along it. A quarter-loop echo plays the bent sound against straight time.
+
+**Why:** This is Player B. The card drawn was 'Distorting time.' from Oblique Strategies (Brian Eno and Peter Schmidt). Taken literally, it asks what happens if time inside the loop is the thing you play. Keeping the average speed at 1 is what makes it musical rather than broken: it is swing and wow taken to an extreme, and it never drifts out of sync.
+
+**Learned:** Bending time while keeping the loop length gives you groove control with no tempo detection. Drawing the time map makes an abstract idea visible at a glance (principle 4 again).
+
+**Oblique card drawn:** “Distorting time.”
+
+**Responds to:** No feedback comments yet.
+
+**Next:** Try a sync mode where 008's second loop gets bent against a straight first loop.

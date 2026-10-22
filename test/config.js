@@ -10,4 +10,6 @@ module.exports = {
   '008-two.html': { start: [{ click: [500, 350] }, { move: [300, 300] }], after: [{ move: [800, 500] }], dropAt: [200, 350] },
   '009-grain.html': { start: [{ move: [400, 300] }, { click: [400, 300] }], after: [{ down: 1 }, { move: [600, 200] }, { wait: 400 }, { up: 1 }] },
   '010-oblique.html': { start: [{ click: [500, 350] }], after: [{ click: [500, 350] }, { click: [500, 350] }] },
+  '011-print.html': { start: [{ move: [500, 350] }, { click: [500, 350] }], after: [{ key: 'Space' }, { wait: 2600 }, { key: 'Backspace' }, { wait: 300 }, { key: 'Space' }, { wait: 300 }] },
+  '012-warp.html': { start: [{ move: [700, 200] }, { click: [700, 200] }], after: [{ move: [300, 500] }, { wait: 2200 }] },
 };

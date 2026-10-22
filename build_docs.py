@@ -52,6 +52,6 @@ Oblique Strategies is by Brian Eno and Peter Schmidt. The cards in 010 are short
 # DEVLOG
 dl=['# Devlog\n','A dated entry for each player: what it is, why it exists, its size, and what it taught us for the next one.\n']
 for p in P:
-    d='21 Oct 2026' if p['id']=='000' else '22 Oct 2026'
-    dl.append(f"## {d} · {p['id']} · {p['name']}\n\n**Play:** {p['page']}  \n**Size:** {p['lines']} lines, {p['bytes']} bytes\n\n**What:** {p['what']}\n\n**Why:** {p['why']}\n\n**Learned:** {p['learned']}\n\n**Next:** {p['next']}\n")
+    d=p.get('date') or ('21 Oct 2026' if p['id']=='000' else '22 Oct 2026')
+    dl.append(f"## {d} · {p['id']} · {p['name']}\n\n**Play:** {p['page']}  \n**Size:** {p['lines']} lines, {p['bytes']} bytes\n\n**What:** {p['what']}\n\n**Why:** {p['why']}\n\n**Learned:** {p['learned']}\n\n"+(f"**Oblique card drawn:** “{p['card']}”\n\n" if p.get('card') else '')+(f"**Responds to:** {p['responds']}\n\n" if p.get('responds') else '')+f"**Next:** {p['next']}\n")
 open('DEVLOG.md','w').write('\n'.join(dl))

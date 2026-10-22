@@ -1,13 +1,137 @@
 [
-{"id":"000","slug":"one","name":"One","how":"Click to play/stop. Move the pointer up and down. Drop or pick a sound.","what":"The baseline: one sample, looped, with a single gesture. Pointer height is one 'depth' value that closes a low-pass filter while pushing a dotted-eighth feedback delay and a generated reverb up together.","why":"If you can only have one control, make it a macro. Filter, delay and reverb almost always move together when you play a loop live (darker = further away = more echo), so one axis that moves all three still feels musical.","learned":"One gesture is enough to be expressive. The text hint is the biggest bit of UI, and the AIFF parser is the biggest bit of code.","next":"Try taking the text away entirely, and try a single key instead of a pointer."},
-{"id":"001","slug":"key","name":"Key","how":"Space: tap to play/stop, hold to throw the loop into the echo. Drop a sound.","what":"A one-key player. Tapping space toggles the loop. Holding space does a dub throw: delay send and feedback swell, the reverb blooms, and the filter sinks while the dry loop ducks. Letting go brings it back.","why":"Live dub mixing is mostly one move, the throw, repeated with good timing. Splitting one key into tap and hold gives two verbs with no extra controls. The only UI is a dot that grows while you hold.","learned":"Tap versus hold doubles what one control can do. Timing is the instrument here, not position.","next":"Remove even the dot and let the whole screen be the feedback."},
-{"id":"002","slug":"move","name":"Move","how":"Click once (the browser needs it), then just move. Leave the window to fade out. Drop a sound.","what":"No UI at all. The pointer is the instrument: X is tape speed, snapped to semitones across ±1 octave, and Y is a resonant low-pass. A radial glow follows the cursor and changes colour with pitch. Moving off the window fades the loop out. A limiter keeps it safe.","why":"Testing the floor: can a player have zero visible controls and still be playable? Snapping pitch to semitones keeps it musical rather than a siren.","learned":"Zero UI works if the screen gives feedback (the glow). Resonance plus feedback on pure tones clipped in testing, so after this every player keeps levels conservative and 002 gets a compressor.","next":"Bring back exactly one physical-feeling control."},
-{"id":"003","slug":"knob","name":"Knob","how":"Drag the knob up/down. Click it (without dragging) to pick a sound, or drop one.","what":"A single knob that is one journey: off → clean → filtered and resonant → echoing → washed out in reverb and slowing down like tape.","why":"The 000 macro was linear. This one is a narrative: each stretch of the knob's travel brings in a different effect, so one control gives a whole arrangement arc (intro → build → breakdown).","learned":"Ordering effects along one control's travel turns a parameter into a composition. Click-without-drag to load a file is a nice hidden second verb.","next":"Instead of a gesture, let text be the control."},
-{"id":"004","slug":"type","name":"Type","how":"Type in the line. Enter plays/stops. a–p = slices, CAPS = octave up, q–z = reversed slices, space/. = rest, - = hold, * = echo throw, ~ = room on/off. Drop a sound.","what":"The text is the score. The loop is cut into 16 slices and the characters you type play them as 16th notes, with symbols for rests, ties, echo throws and reverb.","why":"Minimal UI doesn't have to mean minimal control. A single text field is the densest UI there is, and typing words gives you patterns you'd never program on purpose. Try your name.","learned":"A text field is a sequencer, a pattern store and a share format in one, so you can paste a pattern to a friend. Slicing is the most musical transform of a loop.","next":"Keep the keyboard but drop the text field: every key does something."},
-{"id":"005","slug":"keys","name":"Keys","how":"Space play/stop, Enter pick a file. 1–6 loop length, q–p loop start, a–l pitch, z–m effect colour. Drop a sound.","what":"Keyboard only. Each row of the keyboard is one dimension of the loop: number row = loop length (beat repeat down to 1/32), top row = loop start, home row = pitch, bottom row = effect preset (dry, low, high, echo, room, crush, all). The state is one line of text.","why":"Physical layout as interface: you learn it by position, not by reading labels. It's the most playable of the set, a beat-repeat performance tool with no mouse.","learned":"Rows map well to dimensions. Presets (the z–m colours) beat continuous parameters when you only have keys.","next":"How small can the code get? Try 1 KB."},
-{"id":"006","slug":"1k","name":"1K","how":"Click anywhere to play. Mouse Y = filter, X = delay time. Use the file button to load.","what":"Code golf: a full sample loop player with a built-in sound, file loading, a low-pass filter and a feedback delay in under 1 KB of HTML.","why":"Counting bytes is a way of asking what's essential. The answer is buffer + loop + one filter + one delay + a mouse. Everything else in 000–005 is comfort.","learned":"The essence fits in ~850 bytes. What gets cut first is AIFF support (Chrome can't decode AIFF natively), nice text and safe levels.","next":"Give the loop a mind of its own so it needs no input at all."},
-{"id":"007","slug":"drift","name":"Drift","how":"Click to start/pause. Then leave it alone. Drop a sound.","what":"A generative, self-evolving loop. Eight steps, each a 'gene' [slice, rate, reverse, gain]. Every bar one gene mutates, while the filter and echo random-walk. Now and then it resets to the original, so it keeps coming home.","why":"The most minimal control is none. In the spirit of Eno's generative music, you set the conditions (the sample) and the system plays it. The genome on screen shows what's changing.","learned":"Slow mutation (one gene per bar) keeps it recognisable. An occasional reset stops it drifting into noise. Showing the genome makes a generative system legible.","next":"Two sources, one gesture."},
-{"id":"008","slug":"two","name":"Two","how":"Click to play/stop. Pointer X crossfades A↔B, Y adds space. Drop a sound on the left or right half, or click A / B.","what":"A two-sample crossfader with an equal-power curve. Loop B is varispeeded to the nearest power-of-two length ratio with loop A, so the two always stay in phase. Y is the same depth macro as 000.","why":"The smallest DJ: two things and the space between them. Matching loop lengths by speed is the cheapest beat-sync there is, with no BPM detection.","learned":"Reusing the 000 macro on the other axis made it instantly playable. Power-of-two speed matching works well for Splice loops, which mostly have bar-multiple lengths.","next":"Zoom into one sample instead of between two: grains."},
-{"id":"009","slug":"grain","name":"Grain","how":"Click to start. X = position in the sound, Y = grain size. Hold the mouse for scatter + octave shimmer. Space stops. Drop a sound.","what":"A granular player in under 40 lines: a cloud of Hann-windowed grains read from the pointer's position, into a long reverb. The waveform is drawn with live grain marks.","why":"Granular is the extreme of 'looping': every grain is a tiny loop. Mapping position and size to X and Y makes a scrub-able sound cloud from any one-shot.","learned":"setValueCurveAtTime with a 64-point Hann is all a grain envelope needs. Holding the mouse for a 'more' mode (scatter + shimmer) is the same tap-vs-hold idea as 001.","next":"Hand the decisions to a deck of cards."},
-{"id":"010","slug":"oblique","name":"Oblique","how":"Click to start and draw a card. A new card is drawn every 4 loops. Drop a sound.","what":"The loop is played by a deck of Oblique Strategies-style cards (after Brian Eno & Peter Schmidt). Each card is a concrete, audible instruction: 'Reverse' flips the loop, 'Emphasise the flaws' bit-crushes, 'Repetition is a form of change' halves the loop, 'Use an old idea' returns to an earlier state, 'Do nothing for as long as possible' freezes changes for 12 loops.","why":"Turns a creative-block tool into a performer. The only UI is the card, a sentence. It's a different kind of generative from 007: semantic instead of random, and each change has a reason you can read.","learned":"Words make generative changes understandable. History ('Use an old idea') gives the system memory. It's the biggest file (5 KB), because each card is code.","next":"Daily runs: one player from our own reasoning, one from a random card."}
+{
+"id": "000",
+"slug": "one",
+"name": "One",
+"how": "Click to play/stop. Move the pointer up and down. Drop or pick a sound.",
+"what": "The baseline: one sample, looped, with a single gesture. Pointer height is one 'depth' value that closes a low-pass filter while pushing a dotted-eighth feedback delay and a generated reverb up together.",
+"why": "If you can only have one control, make it a macro. Filter, delay and reverb almost always move together when you play a loop live (darker = further away = more echo), so one axis that moves all three still feels musical.",
+"learned": "One gesture is enough to be expressive. The text hint is the biggest bit of UI, and the AIFF parser is the biggest bit of code.",
+"next": "Try taking the text away entirely, and try a single key instead of a pointer."
+},
+{
+"id": "001",
+"slug": "key",
+"name": "Key",
+"how": "Space: tap to play/stop, hold to throw the loop into the echo. Drop a sound.",
+"what": "A one-key player. Tapping space toggles the loop. Holding space does a dub throw: delay send and feedback swell, the reverb blooms, and the filter sinks while the dry loop ducks. Letting go brings it back.",
+"why": "Live dub mixing is mostly one move, the throw, repeated with good timing. Splitting one key into tap and hold gives two verbs with no extra controls. The only UI is a dot that grows while you hold.",
+"learned": "Tap versus hold doubles what one control can do. Timing is the instrument here, not position.",
+"next": "Remove even the dot and let the whole screen be the feedback."
+},
+{
+"id": "002",
+"slug": "move",
+"name": "Move",
+"how": "Click once (the browser needs it), then just move. Leave the window to fade out. Drop a sound.",
+"what": "No UI at all. The pointer is the instrument: X is tape speed, snapped to semitones across ±1 octave, and Y is a resonant low-pass. A radial glow follows the cursor and changes colour with pitch. Moving off the window fades the loop out. A limiter keeps it safe.",
+"why": "Testing the floor: can a player have zero visible controls and still be playable? Snapping pitch to semitones keeps it musical rather than a siren.",
+"learned": "Zero UI works if the screen gives feedback (the glow). Resonance plus feedback on pure tones clipped in testing, so after this every player keeps levels conservative and 002 gets a compressor.",
+"next": "Bring back exactly one physical-feeling control."
+},
+{
+"id": "003",
+"slug": "knob",
+"name": "Knob",
+"how": "Drag the knob up/down. Click it (without dragging) to pick a sound, or drop one.",
+"what": "A single knob that is one journey: off → clean → filtered and resonant → echoing → washed out in reverb and slowing down like tape.",
+"why": "The 000 macro was linear. This one is a narrative: each stretch of the knob's travel brings in a different effect, so one control gives a whole arrangement arc (intro → build → breakdown).",
+"learned": "Ordering effects along one control's travel turns a parameter into a composition. Click-without-drag to load a file is a nice hidden second verb.",
+"next": "Instead of a gesture, let text be the control."
+},
+{
+"id": "004",
+"slug": "type",
+"name": "Type",
+"how": "Type in the line. Enter plays/stops. a–p = slices, CAPS = octave up, q–z = reversed slices, space/. = rest, - = hold, * = echo throw, ~ = room on/off. Drop a sound.",
+"what": "The text is the score. The loop is cut into 16 slices and the characters you type play them as 16th notes, with symbols for rests, ties, echo throws and reverb.",
+"why": "Minimal UI doesn't have to mean minimal control. A single text field is the densest UI there is, and typing words gives you patterns you'd never program on purpose. Try your name.",
+"learned": "A text field is a sequencer, a pattern store and a share format in one, so you can paste a pattern to a friend. Slicing is the most musical transform of a loop.",
+"next": "Keep the keyboard but drop the text field: every key does something."
+},
+{
+"id": "005",
+"slug": "keys",
+"name": "Keys",
+"how": "Space play/stop, Enter pick a file. 1–6 loop length, q–p loop start, a–l pitch, z–m effect colour. Drop a sound.",
+"what": "Keyboard only. Each row of the keyboard is one dimension of the loop: number row = loop length (beat repeat down to 1/32), top row = loop start, home row = pitch, bottom row = effect preset (dry, low, high, echo, room, crush, all). The state is one line of text.",
+"why": "Physical layout as interface: you learn it by position, not by reading labels. It's the most playable of the set, a beat-repeat performance tool with no mouse.",
+"learned": "Rows map well to dimensions. Presets (the z–m colours) beat continuous parameters when you only have keys.",
+"next": "How small can the code get? Try 1 KB."
+},
+{
+"id": "006",
+"slug": "1k",
+"name": "1K",
+"how": "Click anywhere to play. Mouse Y = filter, X = delay time. Use the file button to load.",
+"what": "Code golf: a full sample loop player with a built-in sound, file loading, a low-pass filter and a feedback delay in under 1 KB of HTML.",
+"why": "Counting bytes is a way of asking what's essential. The answer is buffer + loop + one filter + one delay + a mouse. Everything else in 000–005 is comfort.",
+"learned": "The essence fits in ~850 bytes. What gets cut first is AIFF support (Chrome can't decode AIFF natively), nice text and safe levels.",
+"next": "Give the loop a mind of its own so it needs no input at all."
+},
+{
+"id": "007",
+"slug": "drift",
+"name": "Drift",
+"how": "Click to start/pause. Then leave it alone. Drop a sound.",
+"what": "A generative, self-evolving loop. Eight steps, each a 'gene' [slice, rate, reverse, gain]. Every bar one gene mutates, while the filter and echo random-walk. Now and then it resets to the original, so it keeps coming home.",
+"why": "The most minimal control is none. In the spirit of Eno's generative music, you set the conditions (the sample) and the system plays it. The genome on screen shows what's changing.",
+"learned": "Slow mutation (one gene per bar) keeps it recognisable. An occasional reset stops it drifting into noise. Showing the genome makes a generative system legible.",
+"next": "Two sources, one gesture."
+},
+{
+"id": "008",
+"slug": "two",
+"name": "Two",
+"how": "Click to play/stop. Pointer X crossfades A↔B, Y adds space. Drop a sound on the left or right half, or click A / B.",
+"what": "A two-sample crossfader with an equal-power curve. Loop B is varispeeded to the nearest power-of-two length ratio with loop A, so the two always stay in phase. Y is the same depth macro as 000.",
+"why": "The smallest DJ: two things and the space between them. Matching loop lengths by speed is the cheapest beat-sync there is, with no BPM detection.",
+"learned": "Reusing the 000 macro on the other axis made it instantly playable. Power-of-two speed matching works well for Splice loops, which mostly have bar-multiple lengths.",
+"next": "Zoom into one sample instead of between two: grains."
+},
+{
+"id": "009",
+"slug": "grain",
+"name": "Grain",
+"how": "Click to start. X = position in the sound, Y = grain size. Hold the mouse for scatter + octave shimmer. Space stops. Drop a sound.",
+"what": "A granular player in under 40 lines: a cloud of Hann-windowed grains read from the pointer's position, into a long reverb. The waveform is drawn with live grain marks.",
+"why": "Granular is the extreme of 'looping': every grain is a tiny loop. Mapping position and size to X and Y makes a scrub-able sound cloud from any one-shot.",
+"learned": "setValueCurveAtTime with a 64-point Hann is all a grain envelope needs. Holding the mouse for a 'more' mode (scatter + shimmer) is the same tap-vs-hold idea as 001.",
+"next": "Hand the decisions to a deck of cards."
+},
+{
+"id": "010",
+"slug": "oblique",
+"name": "Oblique",
+"how": "Click to start and draw a card. A new card is drawn every 4 loops. Drop a sound.",
+"what": "The loop is played by a deck of Oblique Strategies-style cards (after Brian Eno & Peter Schmidt). Each card is a concrete, audible instruction: 'Reverse' flips the loop, 'Emphasise the flaws' bit-crushes, 'Repetition is a form of change' halves the loop, 'Use an old idea' returns to an earlier state, 'Do nothing for as long as possible' freezes changes for 12 loops.",
+"why": "Turns a creative-block tool into a performer. The only UI is the card, a sentence. It's a different kind of generative from 007: semantic instead of random, and each change has a reason you can read.",
+"learned": "Words make generative changes understandable. History ('Use an old idea') gives the system memory. It's the biggest file (5 KB), because each card is code.",
+"next": "Daily runs: one player from our own reasoning, one from a random card."
+},
+{
+"id": "011",
+"slug": "print",
+"name": "Print",
+"date": "22 Oct 2026",
+"how": "Click to play/stop. Pointer up/down = depth. Space prints the loop into itself, Backspace undoes, S saves the loop as a WAV. Drop a sound.",
+"what": "A one-key resampler. Space bounces one loop through the player's own filter, echo and reverb (offline, with the effect tails folded back onto the start so it stays seamless) and that print becomes the new loop at the next loop boundary. Prints stack, so each one sinks the sound further into its own echoes. Backspace steps back through the prints and S downloads the current loop as a WAV.",
+"why": "This is Player A, my pick for what to do next. It answers the open question in LEARNINGS.md, 'what is the minimal recording gesture?', with a single tap: the length comes from the loop, and it happens at the next loop boundary so it's always in time. It reuses the 000 depth macro because that's the most playable control so far, and printing over and over turns one control into a slow, Basinski-style decay piece. S gives Craig a file he can take back into his DAW or Splice folder.",
+"learned": "Rendering offline is a better recording than capturing live output: no latency to line up, it's exactly one loop long, and folding the tails in makes any loop seamless. Normalising each print keeps the levels safe as the prints stack.",
+"next": "Try a print that only keeps the wet signal, and a way to print just half the loop.",
+"responds": "No feedback comments yet, so this follows the open questions in LEARNINGS.md."
+},
+{
+"id": "012",
+"slug": "warp",
+"name": "Warp",
+"date": "22 Oct 2026",
+"how": "Click to play/stop. Pointer up = bend time more, left/right = how many bends per loop (1, 2, 3, 4, 6 or 8). Drop a sound.",
+"what": "Each loop still lasts exactly as long, but time inside it is bent. Playback speed follows 1 + a·sin(2πkt/D), which averages to exactly 1, so the loop rushes and drags (with tape-style pitch bends) but always lands back on the downbeat. The screen draws the time map, sample position against clock time, so you can see the bend, with a playhead dot moving along it. A quarter-loop echo plays the bent sound against straight time.",
+"why": "This is Player B. The card drawn was 'Distorting time.' from Oblique Strategies (Brian Eno and Peter Schmidt). Taken literally, it asks what happens if time inside the loop is the thing you play. Keeping the average speed at 1 is what makes it musical rather than broken: it is swing and wow taken to an extreme, and it never drifts out of sync.",
+"learned": "Bending time while keeping the loop length gives you groove control with no tempo detection. Drawing the time map makes an abstract idea visible at a glance (principle 4 again).",
+"next": "Try a sync mode where 008's second loop gets bent against a straight first loop.",
+"card": "Distorting time.",
+"responds": "No feedback comments yet."
+}
 ]

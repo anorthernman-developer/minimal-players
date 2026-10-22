@@ -64,5 +64,17 @@
   "slug": "oblique",
   "lines": 38,
   "bytes": 5164
+ },
+ {
+  "id": "011",
+  "slug": "print",
+  "lines": 36,
+  "bytes": 4853
+ },
+ {
+  "id": "012",
+  "slug": "warp",
+  "lines": 28,
+  "bytes": 3843
  }
 ]

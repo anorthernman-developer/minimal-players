@@ -1,0 +1,36 @@
+<!doctype html><meta charset=utf-8><title>011 · print</title>
+<style>html{height:100%;background:#0d0c0b;color:#a98;font:13px monospace;cursor:ns-resize;user-select:none}body{margin:0;height:100%;display:grid;place-items:center}p{margin:0;text-align:center;line-height:1.9}b{color:#fd8;font-weight:normal}</style>
+<p id=m>click to play · move up for depth<br>space = print the loop into itself · backspace = undo · s = save wav<br>drop a sound</p>
+<script>
+// Print: one tap bounces the loop through its own effects (tails folded back in, so it stays seamless) and that becomes the loop. Prints stack.
+const A=new AudioContext(),R=A.sampleRate,$=document.getElementById('m'),out=A.createDynamicsCompressor();out.connect(A.destination);
+let buf=A.createBuffer(1,R*2,R),hist=[],src,t0=0,on=0,depth=.3,n=0;
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+const ir=A.createBuffer(2,R*4,R);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length)**3}
+function chain(c,dur,o){const lp=c.createBiquadFilter(),dl=c.createDelay(2),fb=c.createGain(),ds=c.createGain(),rv=c.createConvolver(),rs=c.createGain();rv.buffer=ir;lp.Q.value=2;dl.delayTime.value=Math.min(1.9,dur*3/16);
+[[lp,o],[lp,ds],[ds,dl],[dl,fb],[fb,dl],[dl,o],[lp,rs],[rs,rv],[rv,o]].forEach(([a,b])=>a.connect(b));
+return{i:lp,dl,set(d,live){[[lp.frequency,20000*.02**d],[ds.gain,d*.7],[fb.gain,.2+d*.45],[rs.gain,d*.5]].forEach(([p,v])=>live?p.setTargetAtTime(v,c.currentTime,.03):p.value=v)}}}
+const fx=chain(A,2,out);fx.set(depth,1);
+function play(b,at){if(src)src.stop(at);src=A.createBufferSource();src.buffer=b;src.loop=true;src.connect(fx.i);src.start(at);t0=at;fx.dl.delayTime.setValueAtTime(Math.min(1.9,b.duration*3/16),at)}
+const edge=()=>t0+Math.ceil((A.currentTime+.03-t0)/buf.duration)*buf.duration;
+function show(t){$.innerHTML=(t||'<b>'+('▮'.repeat(n)||'·')+'</b>  print '+n+' · depth '+(depth*100|0)+'%')+'<br>space print · backspace undo · s save'}
+async function print(){if(!on)return;show('printing…');const b=buf,L=b.length,O=new OfflineAudioContext(2,L*4,b.sampleRate),f=chain(O,b.duration,O.destination),s=O.createBufferSource();
+f.set(depth);s.buffer=b;s.connect(f.i);s.start();const r=await O.startRendering(),x=O.createBuffer(2,L,b.sampleRate);let pk=1e-9;
+for(let c=0;c<2;c++){const d=x.getChannelData(c),q=r.getChannelData(c);for(let i=0;i<L;i++){d[i]=q[i]+q[i+L]+q[i+2*L]+q[i+3*L];pk=Math.max(pk,Math.abs(d[i]))}}
+for(let c=0;c<2;c++){const d=x.getChannelData(c);for(let i=0;i<L;i++)d[i]*=.9/pk}
+if(buf!==b)return show();hist.push(b);buf=x;n++;play(x,edge());show()}
+function undo(){if(on&&hist.length){buf=hist.pop();n--;play(buf,edge());show()}}
+function save(){const b=buf,c=b.numberOfChannels,L=b.length,ch=[...Array(c)].map((_,k)=>b.getChannelData(k)),v=new DataView(new ArrayBuffer(44+L*c*2)),w=(o,s)=>[...s].forEach((h,i)=>v.setUint8(o+i,h.charCodeAt(0)));
+w(0,'RIFF');v.setUint32(4,36+L*c*2,1);w(8,'WAVEfmt ');v.setUint32(16,16,1);v.setUint16(20,1,1);v.setUint16(22,c,1);v.setUint32(24,b.sampleRate,1);v.setUint32(28,b.sampleRate*c*2,1);v.setUint16(32,c*2,1);v.setUint16(34,16,1);w(36,'data');v.setUint32(40,L*c*2,1);
+for(let i=0;i<L;i++)for(let k=0;k<c;k++)v.setInt16(44+(i*c+k)*2,Math.max(-1,Math.min(1,ch[k][i]))*32767,1);
+const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([v],{type:'audio/wav'}));a.download='print-'+n+'.wav';a.click()}
+onclick=()=>{A.resume();on^=1;if(on)play(buf,A.currentTime+.05);else{src.stop();src=null}on?show():show('stopped · click to play')};
+onpointermove=e=>{depth=1-e.clientY/innerHeight;fx.set(depth,1);if(on)show()};
+onkeydown=e=>{if(e.repeat)return;if(e.code=='Space'){e.preventDefault();print()}if(e.code=='Backspace')undo();if(e.key=='s')save()};
+async function load(f){const b=await f.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}hist=[];n=0;A.resume();on=1;play(buf,A.currentTime+.05);show()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>

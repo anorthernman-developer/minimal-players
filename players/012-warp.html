@@ -1,0 +1,28 @@
+<!doctype html><meta charset=utf-8><title>012 · warp</title>
+<style>html{height:100%;background:#08090b;color:#778;font:13px monospace;cursor:crosshair;user-select:none}body{margin:0;overflow:hidden}canvas{position:fixed;inset:0}p{position:fixed;left:0;right:0;text-align:center;margin:0}#q{top:7vh;color:#ddd;font:italic 22px Georgia,serif}#q small{display:block;font:11px monospace;color:#556;margin-top:6px}#h{bottom:6vh}</style>
+<canvas></canvas><p id=q>“Distorting time.”<small>Oblique Strategies · Brian Eno &amp; Peter Schmidt</small></p><p id=h>click to play · up = bend time · left/right = how many bends · drop a sound</p>
+<script>
+// Warp: every loop still lasts exactly as long, but time inside it is bent. Playback speed = 1 + a·sin(2πkt/D), which averages to 1, so the loop never drifts.
+const A=new AudioContext(),R=A.sampleRate,cv=document.querySelector('canvas'),x=cv.getContext('2d'),out=A.createDynamicsCompressor();out.connect(A.destination);
+let buf=A.createBuffer(1,R*2,R),on=0,next=0,amt=.4,m=2,cyc=[];
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+const dl=A.createDelay(2),fb=A.createGain(),ds=A.createGain();fb.gain.value=.4;[[ds,dl],[dl,fb],[fb,dl],[dl,out]].forEach(([a,b])=>a.connect(b));
+function cycle(T){const D=buf.duration,a=amt,k=m,s=A.createBufferSource(),g=A.createGain();s.buffer=buf;
+s.playbackRate.setValueCurveAtTime(Float32Array.from({length:257},(_,i)=>1+a*Math.sin(6.2832*k*i/256)),T,D);
+g.gain.setValueAtTime(0,T);g.gain.linearRampToValueAtTime(1,T+.004);g.gain.setValueAtTime(1,T+D-.004);g.gain.linearRampToValueAtTime(0,T+D);
+s.connect(g);g.connect(out);g.connect(ds);s.start(T);s.stop(T+D+.01);ds.gain.setValueAtTime(a*.45,T);dl.delayTime.setValueAtTime(Math.min(1.9,D/4),T);cyc=[...cyc.slice(-2),{T,D,a,k,s}]}
+setInterval(()=>{while(on&&next<A.currentTime+.15){cycle(next);next+=buf.duration}},25);
+function draw(){requestAnimationFrame(draw);const W=innerWidth,H=innerHeight,z=Math.min(W,H)*.5,ox=(W-z)/2,oy=(H+z)/2;if(cv.width!=W||cv.height!=H){cv.width=W;cv.height=H}x.clearRect(0,0,W,H);
+const c=on&&cyc.filter(c=>c.T<=A.currentTime).pop()||{a:amt,k:m},P=u=>u-c.a/(6.2832*c.k)*(Math.cos(6.2832*c.k*u)-1);
+x.lineWidth=1;x.strokeStyle='#223';x.beginPath();x.moveTo(ox,oy);x.lineTo(ox+z,oy-z);x.stroke();x.strokeStyle='#ccd';x.lineWidth=2;x.beginPath();for(let i=0;i<=200;i++)x.lineTo(ox+i/200*z,oy-P(i/200)*z);x.stroke();
+if(c.T!=null){const u=Math.min(1,(A.currentTime-c.T)/c.D);x.fillStyle='#f63';x.beginPath();x.arc(ox+u*z,oy-P(u)*z,6,0,7);x.fill()}}
+draw();
+onclick=()=>{A.resume();on^=1;if(on)next=A.currentTime+.05;else cyc.forEach(c=>{try{c.s.stop()}catch(e){}})};
+onpointermove=e=>{amt=.85*(1-e.clientY/innerHeight);m=[1,2,3,4,6,8][Math.min(5,e.clientX/innerWidth*6|0)]};
+async function load(f){const b=await f.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}cyc.forEach(c=>{try{c.s.stop()}catch(e){}});A.resume();on=1;next=A.currentTime+.05}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>
