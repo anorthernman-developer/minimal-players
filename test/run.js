@@ -18,7 +18,7 @@ const HOOK = () => {
   window.__rms = () => { const c = __ctx[0]; if (!c) return -1; const d = new Float32Array(2048); c.__an.getFloatTimeDomainData(d); return Math.sqrt(d.reduce((s, x) => s + x * x, 0) / d.length); };
 };
 (async () => {
-  const browser = await chromium.launch({ executablePath: process.env.HOME + '/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome', args: ['--autoplay-policy=user-gesture-required'] });
+  const browser = await chromium.launch({ executablePath: process.env.CHROME || [process.env.HOME + '/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome', '/usr/bin/google-chrome', '/usr/bin/chromium'].find(p => fs.existsSync(p)), headless: true, args: ['--autoplay-policy=user-gesture-required'] });
   let fails = 0; const summary = [];
   for (const [file, cfg] of Object.entries(C)) {
     if (only && !file.startsWith(only)) continue;

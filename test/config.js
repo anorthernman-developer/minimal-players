@@ -12,4 +12,6 @@ module.exports = {
   '010-oblique.html': { start: [{ click: [500, 350] }], after: [{ click: [500, 350] }, { click: [500, 350] }] },
   '011-print.html': { start: [{ move: [500, 350] }, { click: [500, 350] }], after: [{ key: 'Space' }, { wait: 2600 }, { key: 'Backspace' }, { wait: 300 }, { key: 'Space' }, { wait: 300 }] },
   '012-warp.html': { start: [{ move: [700, 200] }, { click: [700, 200] }], after: [{ move: [300, 500] }, { wait: 2200 }] },
+  '013-strip.html': { start: [{ move: [500, 350] }, { click: [500, 350] }], after: [{ key: 'Space' }, { wait: 2600 }, { key: 'Shift+Space' }, { wait: 2600 }, { key: 'ArrowLeft' }, { wait: 300 }] },
+  '014-speeds.html': { start: [{ move: [500, 300] }, { click: [500, 300] }], after: [{ move: [200, 150] }, { wait: 1500 }] },
 };

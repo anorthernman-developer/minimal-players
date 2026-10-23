@@ -176,3 +176,35 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 **Responds to:** No feedback comments yet.
 
 **Next:** Try a sync mode where 008's second loop gets bent against a straight first loop.
+
+## 23 Oct 2026 · 013 · Strip
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/013-strip.html  
+**Size:** 40 lines, 5771 bytes
+
+**What:** 011's one-tap print, but every print stays on a strip of small waveforms along the bottom. Click any of them and that print becomes the loop at the next loop boundary, so nothing is ever thrown away and you can jump back and forth between generations. Shift+Space is a second kind of print that keeps only the effects (no dry signal), so the loop turns into its own shadow.
+
+**Why:** This is Player A, my pick for what to do next. Yesterday's LEARNINGS left two follow-ups from 011: 'is saving a WAV enough, or should a player keep a strip of prints?' and 'try a print that only keeps the wet signal'. A strip answers the first: undo in 011 was a one-way stack, which made exploring feel risky. Making history visible and clickable turns it into a palette you can perform from, and it fits principle 4 (zero UI needs feedback) because the strip is both the record and the control. The wet-only print gives a second verb on the same key (principle 2, with Shift instead of hold).
+
+**Learned:** Visible history should make resampling feel safe, so you print more: undo stops being a one-way stack. The wet-only print is the strongest transform so far on paper, since it removes the attack of every hit; whether it reads as a pad after two or three prints on a real Splice loop is a question for Craig.
+
+**Responds to:** No feedback comments yet (checked all feedback issues on 23 Oct), so this follows the open questions in LEARNINGS.md and the 'Next' notes from 011.
+
+**Next:** Try printing half a loop, and dragging a print from the strip out as a file.
+
+## 23 Oct 2026 · 014 · Speeds
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/014-speeds.html  
+**Size:** 28 lines, 3800 bytes
+
+**What:** The same loop plays at four speeds at once, ×2, ×1, ×½ and ×¼, like tape running at different speeds, so each is an octave apart and twice as long as the one above. They all start together, so they meet on the downbeat every four loops. Moving left and right chooses which speed you're listening from, moving up widens the focus so the neighbouring speeds come in too, and the slow layers feed a long, dark echo. The screen shows four orbits with a dot going round each at its own speed.
+
+**Why:** This is Player B. The card drawn was 'Work at a different speed.' from Oblique Strategies (Brian Eno and Peter Schmidt). 012 already bent time inside one loop, so this takes the card more literally: several speeds of the same material working side by side, in the spirit of Eno's own tape-loop pieces. Using powers of two (principle 9) keeps everything in sync with no tempo detection.
+
+**Learned:** Octave-related speeds of one sample line up as top, middle, bass and pad versions of the same material, so in principle they read as an arrangement rather than a mess. A focus control (which layer, and how wide) is a small mixer: two axes for four channels.
+
+**Oblique card drawn:** “Work at a different speed.”
+
+**Responds to:** No feedback comments yet.
+
+**Next:** Try letting each speed have its own effect, and adding ×⅛ for very slow drones.

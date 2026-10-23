@@ -1,0 +1,28 @@
+<!doctype html><meta charset=utf-8><title>014 · speeds</title>
+<style>html{height:100%;background:#090a08;color:#787;font:13px monospace;cursor:crosshair;user-select:none}body{margin:0;overflow:hidden}canvas{position:fixed;inset:0}p{position:fixed;left:0;right:0;text-align:center;margin:0}#q{top:7vh;color:#ddd;font:italic 22px Georgia,serif}#q small{display:block;font:11px monospace;color:#565;margin-top:6px}#h{bottom:6vh}</style>
+<canvas></canvas><p id=q>“Work at a different speed.”<small>Oblique Strategies · Brian Eno &amp; Peter Schmidt</small></p><p id=h>click to play · left/right = which speed you're in · up = let the other speeds in · drop a sound</p>
+<script>
+// Speeds: the same loop runs at four speeds at once (×2, ×1, ×½, ×¼), started together so they all meet on the downbeat every four loops. You choose which speed to listen from.
+const A=new AudioContext(),R=A.sampleRate,cv=document.querySelector('canvas'),x=cv.getContext('2d'),out=A.createDynamicsCompressor();out.connect(A.destination);
+const SP=[2,1,.5,.25];let buf=A.createBuffer(1,R*2,R),on=0,t0=0,f=1,w=.3,L=[];
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)}}
+const dl=A.createDelay(4),fb=A.createGain(),lp=A.createBiquadFilter();fb.gain.value=.35;lp.frequency.value=1800;[[dl,fb],[fb,lp],[lp,dl],[dl,out]].forEach(([a,b])=>a.connect(b));
+const G=SP.map((s,i)=>{const g=A.createGain(),e=A.createGain();g.gain.value=0;g.connect(out);g.connect(e);e.gain.value=i>1?.4:.15;e.connect(dl);return g});
+const lev=()=>SP.map((s,i)=>Math.exp(-((i-f)**2)/(2*(.25+w*1.6)**2))*(i?.8:.5));
+function mix(){lev().forEach((v,i)=>G[i].gain.setTargetAtTime(v,A.currentTime,.08))}
+function start(){L.forEach(s=>{try{s.stop()}catch(e){}});t0=A.currentTime+.05;dl.delayTime.value=Math.min(3.9,buf.duration*.75);
+L=SP.map((s,i)=>{const b=A.createBufferSource();b.buffer=buf;b.loop=true;b.playbackRate.value=s;b.connect(G[i]);b.start(t0);return b});mix()}
+function draw(){requestAnimationFrame(draw);const W=innerWidth,H=innerHeight;if(cv.width!=W||cv.height!=H){cv.width=W;cv.height=H}x.clearRect(0,0,W,H);
+const cx=W/2,cy=H/2,z=Math.min(W,H)*.09,v=lev(),t=on?A.currentTime-t0:0;SP.forEach((s,i)=>{const r=z*(i+1),a=t>0?6.2832*(t*s/buf.duration%1)-1.5708:-1.5708,o=.15+.85*Math.min(1,v[i]/.8);
+x.strokeStyle=`rgba(200,220,190,${o*.5})`;x.lineWidth=1;x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();x.fillStyle=`rgba(255,${180+i*20},90,${o})`;x.beginPath();x.arc(cx+r*Math.cos(a),cy+r*Math.sin(a),3+5*o,0,7);x.fill();
+x.fillStyle=`rgba(150,170,140,${o})`;x.fillText('×'+['2','1','½','¼'][i],cx+r+6,cy-4)})}
+draw();
+onclick=()=>{A.resume();on^=1;if(on)start();else{L.forEach(s=>{try{s.stop()}catch(e){}});L=[]}};
+onpointermove=e=>{f=e.clientX/innerWidth*3;w=1-e.clientY/innerHeight;mix()};
+async function load(F){const b=await F.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}A.resume();on=1;start()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>

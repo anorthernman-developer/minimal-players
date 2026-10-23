@@ -76,5 +76,17 @@
   "slug": "warp",
   "lines": 28,
   "bytes": 3843
+ },
+ {
+  "id": "013",
+  "slug": "strip",
+  "lines": 40,
+  "bytes": 5771
+ },
+ {
+  "id": "014",
+  "slug": "speeds",
+  "lines": 28,
+  "bytes": 3800
  }
 ]
