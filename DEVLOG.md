@@ -208,3 +208,35 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 **Responds to:** No feedback comments yet.
 
 **Next:** Try letting each speed have its own effect, and adding ×⅛ for very slow drones.
+
+## 24 Oct 2026 · 015 · Strata
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/015-strata.html  
+**Size:** 39 lines, 4546 bytes
+
+**What:** 014's idea of one loop at several speeds, taken one step further: five speeds (×2, ×1, ×½, ×¼ and the new ×⅛) and each speed has its own effect. ×2 goes through a highpass and sits to the left, ×1 stays dry in the middle, ×½ is soft-clipped and darkened, ×¼ feeds a dark echo on the right, and ×⅛ only goes into a long reverb, so it becomes a slow drone. The layers meet on the downbeat every eight loops. Number keys mute a layer.
+
+**Why:** This is Player A, my pick for what to do next. 014's devlog ended with 'let each speed have its own effect, and add ×⅛ for very slow drones'. Giving each speed a fixed effect turns five copies of one sample into five different instruments, which tests principle 16 (octaves of one loop make an arrangement) more seriously. It keeps principle 1 too: the effects aren't separate controls, they come with the layer, so the same two pointer axes still mix everything.
+
+**Learned:** Tying an effect to a layer, rather than giving it a knob, adds sound without adding controls. The ×⅛ layer through a wet-only reverb is the first player that makes a drone from any sample. Whether five layers is past the point where it turns to mush is the open question for Craig's ears.
+
+**Responds to:** No feedback comments yet (checked all 17 issues on 24 Oct, and no notes from Craig in chat since the last run), so this follows the 'Next' note from 014 and open question 5 in LEARNINGS.md.
+
+**Next:** Try letting the print from 013 capture a single stratum, so a slow drone layer can be resampled into a new loop.
+
+## 24 Oct 2026 · 016 · Kinds
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/016-kinds.html  
+**Size:** 34 lines, 4683 bytes
+
+**What:** The loop is cut into 16 slices, and each slice is sorted into a 'kind' by how loud and how bright it is. Only the first slice of each kind plays. Every later slice of the same kind falls silent, and an echo of what came before fills the gap. At the bottom of the screen all 16 slices play; as you move up, the player decides more slices are 'the same' and keeps fewer, until only two or three remain. The loop length never changes, so it stays in time. The screen shows the 16 slices as coloured blocks, filled if they play and outlined if they've been removed.
+
+**Why:** This is Player B. The card drawn was 'Only one element of each kind.' from Oblique Strategies (Brian Eno and Peter Schmidt). Most loops are made of repeats (the same kick, the same hat), so the most literal reading of the card is to throw the repeats away and hear what's left. Keeping silences where the repeats were, rather than closing up the gaps, means the groove survives as a skeleton and the echo becomes the instrument.
+
+**Learned:** Subtraction can be generative: one 'strictness' axis on any sample gives a smooth path from the full loop to a sparse skeleton, with no randomness. Very crude features (loudness and zero crossings) were enough to tell a kick from a hat from a note on the built-in loop; real Splice loops may need something better.
+
+**Oblique card drawn:** “Only one element of each kind.”
+
+**Responds to:** No feedback comments yet.
+
+**Next:** Try choosing which slice represents each kind (the loudest, or a random one each loop) instead of always the first.

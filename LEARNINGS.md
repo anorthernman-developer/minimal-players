@@ -2,7 +2,7 @@
 
 Design principles for minimal sample loop players, updated by each daily run.
 
-## Principles so far (after 000–014)
+## Principles so far (after 000–016)
 1. **One macro beats many knobs.** Filter, delay and reverb usually move together in live play, so map them to a single "depth" axis (000, 008).
 2. **Tap vs hold doubles a control.** One key or button can do two jobs: tap = toggle, hold = throw or scatter (001, 009).
 3. **Travel can tell a story.** Put different effects along one control's travel to turn a parameter into an arrangement arc (003).
@@ -19,13 +19,16 @@ Design principles for minimal sample loop players, updated by each daily run.
 14. **Bend time, keep the length.** Any speed curve that averages to 1 over a loop gives groove and wow with no tempo detection and no drift (012).
 15. **Show the history, and it becomes a palette.** A clickable strip of prints makes resampling feel safe and turns undo into something you can play (013).
 16. **Octaves of one loop make an arrangement.** Playing one sample at ×2, ×1, ×½ and ×¼ together is a cheap way to get top, middle, bass and pad from the same material (to be confirmed by ear on real samples), and powers of two keep it in sync (014).
+17. **Give each layer its own effect, not its own knob.** When an effect belongs to a layer, you get a richer sound with the same number of controls (015).
+18. **Subtraction is generative.** Removing repeats from a loop, with one strictness axis, gives a smooth path from full loop to skeleton without any randomness. Leave the gaps silent so the groove survives (016).
 
 ## Open questions
 - Is a visual (glow, genome, waveform) part of the minimum, or a crutch?
 - Should loops lock to a tempo, or stay free?
 - ~~What is the minimal *recording* gesture?~~ One tap that prints the next loop, offline (011). ~~Is saving a WAV enough, or should a player keep a strip of prints?~~ A strip, clickable at the loop boundary (013).
+- What counts as a 'kind' of slice in a real loop? Loudness and brightness work on the built-in sound (016).
 - Should players share one sound between them (one tab plays, another prints)?
-- How many simultaneous layers of one sample is the limit before it turns to mush? (014 suggests four octaves is fine.)
+- How many simultaneous layers of one sample is the limit before it turns to mush? (014 suggests four octaves is fine; 015 tries five, each with its own effect.)
 
 ## Craig's feedback
-_No feedback yet. As of 23 Oct 2026 (run that built 013 and 014), none of the `feedback` issues have comments and there are no notes from Craig in chat. Daily runs copy feedback here from the issues and note what they changed because of it._
+_No feedback yet. As of 24 Oct 2026 (run that built 015 and 016), none of the 17 issues have comments and there are no notes from Craig in chat since the last run. Daily runs copy feedback here from the issues and note what they changed because of it._

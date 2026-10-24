@@ -1,0 +1,34 @@
+<!doctype html><meta charset=utf-8><title>016 · kinds</title>
+<style>html{height:100%;background:#f1eee6;color:#998;font:13px monospace;cursor:crosshair;user-select:none}body{margin:0;overflow:hidden}canvas{position:fixed;inset:0}p{position:fixed;left:0;right:0;text-align:center;margin:0}#q{top:8vh;color:#222;font:italic 22px Georgia,serif}#q small{display:block;font:11px monospace;color:#aa9;margin-top:6px}#h{bottom:6vh}</style>
+<canvas></canvas><p id=q>“Only one element of each kind.”<small>Oblique Strategies · Brian Eno &amp; Peter Schmidt</small></p><p id=h>click to play · up = stricter (fewer kinds) · left/right = echo fills the gaps · drop a sound</p>
+<script>
+// Kinds: the loop is cut into 16 slices and each slice is sorted into a "kind" by loudness and brightness.
+// Only the first slice of each kind plays; its repeats fall silent and the echo fills the gap. The loop length never changes.
+const A=new AudioContext(),R=A.sampleRate,cv=document.querySelector('canvas'),x=cv.getContext('2d'),out=A.createDynamicsCompressor();out.connect(A.destination);
+const S=16;let buf=A.createBuffer(1,R*2,R),on=0,th=.2,ec=.4,F=[],K=[],keep=[],step=0,next=0,cur=-1,tm;
+{const d=buf.getChannelData(0);for(let i=0;i<d.length;i++){const t=i/R,b=t%.5,h=t%.125,n=[262,262,330,392][t*2|0];
+d[i]=.6*Math.sin(6.283*(48*b+3*(1-Math.exp(-40*b))))*Math.exp(-7*b)+.12*(Math.random()-.5)*Math.exp(-50*h)+(t%1>.5&&t%1<.75?.25*Math.sin(6.283*n*t)*Math.exp(-6*(t%.25)):0)}}
+const dl=A.createDelay(2),fb=A.createGain(),lp=A.createBiquadFilter(),wet=A.createGain(),dry=A.createGain();lp.frequency.value=2500;
+[[dry,out],[dry,dl],[dl,lp],[lp,fb],[fb,dl],[lp,wet],[wet,out]].forEach(([a,b])=>a.connect(b));
+// features per slice: loudness (log rms) and brightness (zero crossings)
+function analyse(){const d=buf.getChannelData(0),n=d.length/S|0;F=[];for(let s=0;s<S;s++){let e=0,z=0;for(let i=s*n+1;i<(s+1)*n;i++){e+=d[i]*d[i];if((d[i]>0)!=(d[i-1]>0))z++}
+F.push([Math.log10(Math.sqrt(e/n)+1e-4),z/n])}for(const j of[0,1]){const v=F.map(f=>f[j]),lo=Math.min(...v),r=Math.max(...v)-lo||1;F.forEach(f=>f[j]=(f[j]-lo)/r)}group()}
+function group(){K=[];keep=[];F.forEach((f,i)=>{let k=K.findIndex((g,j)=>Math.hypot(f[0]-F[g][0],f[1]-F[g][1])<th);if(k<0){K.push(i);k=K.length-1;keep[i]=1}else keep[i]=0;F[i].k=k})}
+function tick(){const sl=buf.duration/S;while(next<A.currentTime+.12){if(keep[step]){const b=A.createBufferSource();b.buffer=buf;const g=A.createGain();b.connect(g);g.connect(dry);
+g.gain.setValueAtTime(1,next+sl-.006);g.gain.linearRampToValueAtTime(0,next+sl);b.start(next,step*sl,sl)}step=(step+1)%S;next+=sl}}
+function setFx(){dl.delayTime.setTargetAtTime(Math.min(1.9,buf.duration/S*[1,2,3,4][Math.min(3,ec*4|0)]),A.currentTime,.05);fb.gain.setTargetAtTime(.2+ec*.6,A.currentTime,.05);wet.gain.setTargetAtTime(.2+ec*.7,A.currentTime,.05)}
+function play(){A.resume();clearInterval(tm);on=1;step=0;next=A.currentTime+.05;setFx();tm=setInterval(tick,25);tick()}
+function draw(){requestAnimationFrame(draw);const W=innerWidth,H=innerHeight;if(cv.width!=W||cv.height!=H){cv.width=W;cv.height=H}x.clearRect(0,0,W,H);
+const bw=Math.min(W*.8,800)/S,x0=(W-bw*S)/2,y0=H/2-30,sl=buf.duration/S,p=on?((step-1+S)%S):-1;F.forEach((f,i)=>{const hue=f.k*137%360;
+x.fillStyle=keep[i]?`hsl(${hue},55%,${i==p?40:55}%)`:'transparent';x.strokeStyle=`hsl(${hue},40%,60%)`;x.lineWidth=keep[i]?0:1.5;
+const h=20+70*f[0];x.beginPath();x.rect(x0+i*bw+2,y0+45-h/2,bw-4,h);keep[i]?x.fill():x.stroke();if(i==p){x.fillStyle='#222';x.fillRect(x0+i*bw+2,y0+100,bw-4,3)}});
+x.fillStyle='#887';x.textAlign='center';x.fillText(K.length+' kind'+(K.length==1?'':'s')+' of 16',W/2,y0+130)}
+analyse();draw();
+onclick=()=>{if(on){on=0;clearInterval(tm)}else play()};
+onpointermove=e=>{th=Math.max(0,1-e.clientY/innerHeight)**2*.7;ec=e.clientX/innerWidth;group();setFx()};
+async function load(F){const b=await F.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}analyse();play()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>

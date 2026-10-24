@@ -14,4 +14,6 @@ module.exports = {
   '012-warp.html': { start: [{ move: [700, 200] }, { click: [700, 200] }], after: [{ move: [300, 500] }, { wait: 2200 }] },
   '013-strip.html': { start: [{ move: [500, 350] }, { click: [500, 350] }], after: [{ key: 'Space' }, { wait: 2600 }, { key: 'Shift+Space' }, { wait: 2600 }, { key: 'ArrowLeft' }, { wait: 300 }] },
   '014-speeds.html': { start: [{ move: [500, 300] }, { click: [500, 300] }], after: [{ move: [200, 150] }, { wait: 1500 }] },
+  '015-strata.html': { start: [{ move: [500, 300] }, { click: [500, 300] }], after: [{ key: '2' }, { move: [800, 150] }, { wait: 1500 }, { key: '2' }] },
+  '016-kinds.html': { start: [{ move: [500, 500] }, { click: [500, 500] }], after: [{ move: [700, 150] }, { wait: 1500 }] },
 };

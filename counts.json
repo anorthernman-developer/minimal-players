@@ -88,5 +88,17 @@
   "slug": "speeds",
   "lines": 28,
   "bytes": 3800
+ },
+ {
+  "id": "015",
+  "slug": "strata",
+  "lines": 39,
+  "bytes": 4546
+ },
+ {
+  "id": "016",
+  "slug": "kinds",
+  "lines": 34,
+  "bytes": 4683
  }
 ]

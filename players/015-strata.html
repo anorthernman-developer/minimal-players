@@ -1,0 +1,39 @@
+<!doctype html><meta charset=utf-8><title>015 · strata</title>
+<style>html{height:100%;background:#0a0908;color:#776;font:13px monospace;cursor:crosshair;user-select:none}body{margin:0;overflow:hidden}canvas{position:fixed;inset:0}p{position:fixed;left:0;right:0;text-align:center;margin:0;bottom:6vh}</style>
+<canvas></canvas><p>click to play · left/right = which layer · up = open the others in · 1–5 = mute a layer · drop a sound</p>
+<script>
+// Strata: one loop at five speeds (×2 … ×⅛), and each speed gets its own effect, so the layers sound like different instruments made from the same sample.
+const A=new AudioContext(),R=A.sampleRate,cv=document.querySelector('canvas'),x=cv.getContext('2d'),out=A.createDynamicsCompressor();out.connect(A.destination);
+const SP=[2,1,.5,.25,.125],NM=['×2 air','×1 dry','×½ grit','×¼ echo','×⅛ room'];let buf=A.createBuffer(1,R*2,R),on=0,t0=0,f=1,w=.3,L=[],M=[1,1,1,1,1];
+{const d=buf.getChannelData(0),n=[220,262,330,392,330,262,196,247];for(let i=0;i<d.length;i++){const t=i/R,s=t%.25,k=t%.5;
+d[i]=.3*Math.sin(6.283*n[t*4|0]*t)*Math.exp(-9*s)+.5*Math.sin(6.283*(50*k+3*(1-Math.exp(-40*k))))*Math.exp(-8*k)+.04*(Math.random()-.5)*Math.exp(-30*(t%.125))}}
+const N=(t,o)=>Object.assign(A.createBiquadFilter(),{type:t}),c=(...a)=>{for(let i=1;i<a.length;i++)a[i-1].connect(a[i]);return a[a.length-1]};
+// ×2 air: thin and to the left
+const hp=N('highpass'),pl=A.createStereoPanner();hp.frequency.value=1500;pl.pan.value=-.6;
+// ×½ grit: soft clip, then darken
+const ws=A.createWaveShaper(),lp=N('lowpass');ws.curve=Float32Array.from({length:1024},(_,i)=>Math.tanh(4*(i/511.5-1)));lp.frequency.value=1600;
+// ×¼ echo: dark feedback delay, to the right
+const dl=A.createDelay(4),fb=A.createGain(),dk=N('lowpass'),pr=A.createStereoPanner();fb.gain.value=.45;dk.frequency.value=900;pr.pan.value=.5;
+// ×⅛ room: long noise reverb, wet only
+const cvn=A.createConvolver(),ir=A.createBuffer(2,R*5,R);for(let k=0;k<2;k++){const d=ir.getChannelData(k);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3)}cvn.buffer=ir;
+const G=SP.map(()=>{const g=A.createGain();g.gain.value=0;return g}),T=[.7,1,.6,.9,1.6];
+c(G[0],hp,pl,out);c(G[1],out);c(G[2],ws,lp,out);c(G[3],dk,dl,fb,dl);dk.connect(pr);dl.connect(pr);pr.connect(out);c(G[4],cvn,out);
+const lev=()=>SP.map((s,i)=>M[i]*T[i]*Math.exp(-((i-f)**2)/(2*(.3+w*2)**2))*.7);
+function mix(){lev().forEach((v,i)=>G[i].gain.setTargetAtTime(v,A.currentTime,.08))}
+function stop(){L.forEach(s=>{try{s.stop()}catch(e){}});L=[]}
+function start(){stop();t0=A.currentTime+.05;dl.delayTime.value=Math.min(3.9,buf.duration*1.5);
+L=SP.map((s,i)=>{const b=A.createBufferSource();b.buffer=buf;b.loop=true;b.playbackRate.value=s;b.connect(G[i]);b.start(t0);return b});mix()}
+function draw(){requestAnimationFrame(draw);const W=innerWidth,H=innerHeight;if(cv.width!=W||cv.height!=H){cv.width=W;cv.height=H}x.clearRect(0,0,W,H);
+const cx=W/2,cy=H/2-10,z=Math.min(W,H)*.072,v=lev(),t=on?A.currentTime-t0:0;SP.forEach((s,i)=>{const r=z*(i+1),a=t>0?6.2832*(t*s/buf.duration%1)-1.5708:-1.5708,o=.12+.88*Math.min(1,v[i]/.6);
+x.strokeStyle=`rgba(220,210,190,${M[i]?o*.5:.08})`;x.setLineDash(M[i]?[]:[2,5]);x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();x.fillStyle=`rgba(255,${200-i*25},${80+i*30},${M[i]?o:.1})`;x.beginPath();x.arc(cx+r*Math.cos(a),cy+r*Math.sin(a),3+5*o,0,7);x.fill();
+x.fillStyle=`rgba(170,160,140,${M[i]?o:.2})`;x.textAlign='center';x.fillText((i+1)+' '+NM[i],cx,cy-r-5)})}
+draw();
+onclick=()=>{A.resume();on^=1;on?start():stop()};
+onpointermove=e=>{f=e.clientX/innerWidth*4;w=1-e.clientY/innerHeight;mix()};
+onkeydown=e=>{const i=+e.key-1;if(i>=0&&i<5){M[i]^=1;mix()}};
+async function load(F){const b=await F.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}A.resume();on=1;start()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>
