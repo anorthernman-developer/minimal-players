@@ -16,4 +16,6 @@ module.exports = {
   '014-speeds.html': { start: [{ move: [500, 300] }, { click: [500, 300] }], after: [{ move: [200, 150] }, { wait: 1500 }] },
   '015-strata.html': { start: [{ move: [500, 300] }, { click: [500, 300] }], after: [{ key: '2' }, { move: [800, 150] }, { wait: 1500 }, { key: '2' }] },
   '016-kinds.html': { start: [{ move: [500, 500] }, { click: [500, 500] }], after: [{ move: [700, 150] }, { wait: 1500 }] },
+  '017-sediment.html': { start: [{ move: [500, 100] }, { click: [500, 100] }], after: [{ move: [500, 650] }, { wait: 800 }, { key: 'Space' }, { wait: 1500 }, { move: [500, 300] }, { key: 'Space' }, { wait: 1200 }, { key: 'Backspace' }, { wait: 300 }] },
+  '018-finished.html': { start: [{ move: [500, 300] }, { click: [500, 300] }], after: [{ wait: 4500 }, { click: [500, 300] }, { wait: 2200 }, { click: [500, 300] }] },
 };

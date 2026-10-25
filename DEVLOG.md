@@ -240,3 +240,35 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 **Responds to:** No feedback comments yet.
 
 **Next:** Try choosing which slice represents each kind (the loudest, or a random one each loop) instead of always the first.
+
+## 25 Oct 2026 · 017 · Sediment
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/017-sediment.html  
+**Size:** 37 lines, 4710 bytes
+
+**What:** One control and one key. The loop plays at four speeds at once, ×1, ×½, ×¼ and ×⅛, and each speed has its own effect: dry, soft-clipped and dark, a dark echo, and a wet-only reverb room. Moving the pointer down sinks you from the dry loop to the slow room. Space prints the layer you're hearing, the part of it that's playing now, as a new loop of exactly the original length. It's rendered offline, with its echo and reverb tails folded back onto the start, then normalised, and all four speeds start again from it. So you can sink a drum loop to ×⅛, keep it, and the drone becomes the material you sink again. Backspace goes back one layer. The screen is just one line: which layer you're in and how many prints deep you are.
+
+**Why:** This is Player A, my pick for what to do next. 015's devlog ended with 'let the print from 013 capture a single stratum, so a slow drone layer can be resampled into a new loop'. This joins the two strongest ideas so far, offline print (principle 13) and one effect per speed layer (principle 17), and strips them back: 015's five layers, mute keys and orbit drawing go, and so do 013's strip and save. What's left is one axis (depth) and one verb (keep). It does more than 015 in about the same number of bytes (4710 vs 4546).
+
+**Learned:** Resampling a slowed layer turns a player into a source of new material: every print is a different sample, not just a different setting. Printing 'the part that's playing now' (rather than the start of the slow layer) keeps the gesture tied to what you just heard. Two controls was enough once the effects belonged to the layers. Whether the ×⅛ room print of a real Splice drum loop is a usable pad is for Craig's ears.
+
+**Responds to:** No feedback comments yet (checked all 18 issues on 25 Oct, and no notes from Craig in chat since the last run), so this follows the 'Next' note from 015 and principles 13 and 17 in LEARNINGS.md.
+
+**Next:** Try a version where Space holds (principle 2): tap keeps the layer, hold keeps a mix of all four as you hear them.
+
+## 25 Oct 2026 · 018 · Finished?
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/018-finished.html  
+**Size:** 35 lines, 4731 bytes
+
+**What:** The loop is cut into 16 slices and starts with four of them playing. Every time round, one slice comes in or drops out (it adds while the loop is sparse, takes away when it's full, and otherwise either), and an echo fills the gaps. It never finishes on its own. The card's question stays on the screen, and answering it is the only decision you make: click and the loop freezes as it is, the card turns to 'Finished.' and it tells you how many laps it took. Click again and it starts changing from there. The screen shows the 16 slices, filled if playing, with a mark under the slice that just changed.
+
+**Why:** This is Player B. The card drawn was 'Is it finished?' from Oblique Strategies (Brian Eno and Peter Schmidt). The card is a question you ask about a piece, so the player turns that question into the whole interface: the music arranges itself, slowly, and your only job is to recognise when to stop. It flips 007 (Drift), where you leave it alone, and 016 (Kinds), where you choose how much to remove.
+
+**Learned:** Deciding when to stop is a musical control in its own right. A generative player with a single 'stop changing' answer feels like editing rather than watching. One change per lap is slow enough to hear each decision, and 'four slices on the beat' is a good home to start from (principle 8).
+
+**Oblique card drawn:** “Is it finished?”
+
+**Responds to:** No feedback comments yet.
+
+**Next:** Try keeping every 'finished' state, so the moments you said yes become a set you can step back through.
