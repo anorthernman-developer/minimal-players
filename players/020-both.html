@@ -1,0 +1,36 @@
+<!doctype html><meta charset=utf-8><title>020 · both</title>
+<style>html{height:100%;background:#111;color:#666;font:13px monospace;cursor:crosshair;user-select:none}body{margin:0;overflow:hidden}canvas{position:fixed;inset:0}p{position:fixed;left:0;right:0;text-align:center;margin:0}#q{top:9vh;color:#eee;font:italic 24px Georgia,serif}#q small{display:block;font:11px monospace;color:#555;margin-top:6px}#h{bottom:6vh}</style>
+<canvas></canvas><p id=q>“Faced with a choice, do both.”<small>Oblique Strategies · Brian Eno &amp; Peter Schmidt</small></p><p id=h>click to play · left/right = how many choices · up/down = echo · click again for new choices · space stops · drop a sound · headphones</p>
+<script>
+// Both: every one of the 16 slices is offered two ways to change: reversed, an octave up, an octave down, a stutter, or silence.
+// It never chooses. Your left ear gets one, your right ear gets the other. Moving right lets more slices face their choice; far left is the plain loop in mono.
+const A=new AudioContext(),R=A.sampleRate,cv=document.querySelector('canvas'),x=cv.getContext('2d'),out=A.createDynamicsCompressor();out.connect(A.destination);
+const S=16,O='ruds-',N={r:'reverse',u:'up',d:'down',s:'stutter','-':'rest'};let buf=A.createBuffer(1,R*2,R),rev,on=0,dv=.5,ec=.3,ch=[],step=0,next=0,tm;
+{const d=buf.getChannelData(0);for(let i=0;i<d.length;i++){const t=i/R,b=t%.5,h=t%.125,n=[262,262,330,392][t*2|0];
+d[i]=.6*Math.sin(6.283*(48*b+3*(1-Math.exp(-40*b))))*Math.exp(-7*b)+.12*(Math.random()-.5)*Math.exp(-50*h)+(t%1>.5&&t%1<.75?.25*Math.sin(6.283*n*t)*Math.exp(-6*(t%.25)):0)}}
+const dl=A.createDelay(2),fb=A.createGain(),lp=A.createBiquadFilter(),wet=A.createGain(),bus=A.createGain();lp.frequency.value=1800;bus.gain.value=.8;
+[[bus,out],[bus,dl],[dl,lp],[lp,fb],[fb,dl],[lp,wet],[wet,out]].forEach(([a,b])=>a.connect(b));
+function prep(){rev=A.createBuffer(buf.numberOfChannels,buf.length,buf.sampleRate);for(let c=0;c<buf.numberOfChannels;c++)rev.getChannelData(c).set(buf.getChannelData(c).slice().reverse())}
+// each slice gets two different options and a place in the queue (r): it faces its choice once the pointer passes r
+function roll(){const r=[...Array(S).keys()].sort(()=>Math.random()-.5);ch=r.map(k=>{const a=O[Math.random()*5|0];let b;do b=O[Math.random()*5|0];while(b==a);return{a,b,r:k/S}})}
+function voice(o,t,i,sl,pan){if(o=='-')return;const p=A.createStereoPanner(),g=A.createGain();p.pan.value=pan;g.connect(p);p.connect(bus);const n=o=='s'?4:1,d=sl/n;
+for(let k=0;k<n;k++){const b=A.createBufferSource(),t0=t+k*d;b.buffer=o=='r'?rev:buf;b.playbackRate.value=o=='u'?2:o=='d'?.5:1;b.connect(g);
+b.start(t0,o=='r'?buf.duration-(i+1)*sl:i*sl);b.stop(t0+d)}g.gain.setValueAtTime(1,t+sl-.006);g.gain.linearRampToValueAtTime(0,t+sl)}
+function tick(){const sl=buf.duration/S;while(next<A.currentTime+.12){const c=ch[step];if(c.r<dv){voice(c.a,next,step,sl,-1);voice(c.b,next,step,sl,1)}else voice('n',next,step,sl,0);step=(step+1)%S;next+=sl}}
+function setFx(){dl.delayTime.setTargetAtTime(Math.min(1.9,buf.duration*3/S),A.currentTime,.05);fb.gain.setTargetAtTime(.1+ec*.6,A.currentTime,.05);wet.gain.setTargetAtTime(.1+ec*.7,A.currentTime,.05)}
+function play(){A.resume();clearInterval(tm);on=1;step=0;next=A.currentTime+.05;setFx();tm=setInterval(tick,25);tick()}
+function draw(){requestAnimationFrame(draw);const W=innerWidth,H=innerHeight;if(cv.width!=W||cv.height!=H){cv.width=W;cv.height=H}x.clearRect(0,0,W,H);
+const bw=Math.min(W*.8,800)/S,x0=(W-bw*S)/2,y0=H/2-bw,p=on?((step-1+S)%S):-1;x.textAlign='center';x.font=Math.max(9,bw*.3|0)+'px monospace';
+ch.forEach((c,i)=>{const both=c.r<dv,cx=x0+i*bw+bw/2;[[c.a,y0],[c.b,y0+bw+4]].forEach(([o,y],j)=>{x.fillStyle=both?(i==p?'#fd4':j?'#4ad':'#d74'):'#2a2a2a';x.fillRect(x0+i*bw+2,y,bw-4,bw);
+x.fillStyle=both?'#111':'#555';x.fillText(both?o:'·',cx,y+bw*.62)})});x.fillStyle='#666';x.font='13px monospace';
+const n=ch.filter(c=>c.r<dv).length;x.fillText(on?(n?n+' of 16 slices doing both · left ear top, right ear bottom':'no choices yet · move right'):'',W/2,y0+bw*2+34)}
+prep();roll();draw();
+onclick=()=>{if(!on)play();else roll()};
+onkeydown=e=>{if(e.code=='Space'){e.preventDefault();if(on){on=0;clearInterval(tm)}else play()}};
+onpointermove=e=>{dv=e.clientX/innerWidth;ec=1-e.clientY/innerHeight;setFx()};
+async function load(F){const b=await F.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}prep();roll();play()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>

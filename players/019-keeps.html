@@ -1,0 +1,39 @@
+<!doctype html><meta charset=utf-8><title>019 · keeps</title>
+<style>html{height:100%;background:#eeebe3;color:#998;font:13px monospace;cursor:pointer;user-select:none}body{margin:0;overflow:hidden}canvas{position:fixed;inset:0}p{position:fixed;left:0;right:0;text-align:center;margin:0;bottom:6vh}</style>
+<canvas></canvas><p>click to play · click when you like it to keep it (click again to carry on) · ←/→ step through what you kept · enter plays them in turn · up/down = echo · space stops · drop a sound</p>
+<script>
+// Keeps: like 018, the loop changes one of its 16 slices every lap. Clicking says 'yes, this' and it holds still, but every yes is kept.
+// The yeses become a set you can step back through, or play in turn, one per lap: collecting becomes arranging.
+const A=new AudioContext(),R=A.sampleRate,cv=document.querySelector('canvas'),x=cv.getContext('2d'),out=A.createDynamicsCompressor();out.connect(A.destination);
+const S=16;let buf=A.createBuffer(1,R*2,R),on=0,mode='change',laps=0,ec=.4,keep=[],set=[],ix=-1,step=0,next=0,tm,last=-1,flash=0;
+{const d=buf.getChannelData(0);for(let i=0;i<d.length;i++){const t=i/R,b=t%.5,h=t%.125,n=[262,262,330,392][t*2|0];
+d[i]=.6*Math.sin(6.283*(48*b+3*(1-Math.exp(-40*b))))*Math.exp(-7*b)+.12*(Math.random()-.5)*Math.exp(-50*h)+(t%1>.5&&t%1<.75?.25*Math.sin(6.283*n*t)*Math.exp(-6*(t%.25)):0)}}
+const dl=A.createDelay(2),fb=A.createGain(),lp=A.createBiquadFilter(),wet=A.createGain(),dry=A.createGain();lp.frequency.value=2200;
+[[dry,out],[dry,dl],[dl,lp],[lp,fb],[fb,dl],[lp,wet],[wet,out]].forEach(([a,b])=>a.connect(b));
+function fresh(){keep=Array(S).fill(0);[0,4,8,12].forEach(i=>keep[i]=1);laps=0;mode='change';set=[];ix=-1}
+function change(){const n=keep.reduce((a,b)=>a+b),add=n<4||(n<S&&Math.random()<.55),pool=keep.map((k,i)=>k==add?-1:i).filter(i=>i>=0);
+last=pool[Math.random()*pool.length|0];keep[last]=add?1:0;flash=add?1:-1}
+function lap(){laps++;if(mode=='change')change();else if(mode=='set'){ix=(ix+1)%set.length;keep=set[ix].slice()}}
+function tick(){const sl=buf.duration/S;while(next<A.currentTime+.12){if(step==0&&on>1)lap();on=2;if(keep[step]){const b=A.createBufferSource();b.buffer=buf;const g=A.createGain();b.connect(g);g.connect(dry);
+g.gain.setValueAtTime(1,next+sl-.006);g.gain.linearRampToValueAtTime(0,next+sl);b.start(next,step*sl,sl)}step=(step+1)%S;next+=sl}}
+function setFx(){dl.delayTime.setTargetAtTime(Math.min(1.9,buf.duration*3/S),A.currentTime,.05);fb.gain.setTargetAtTime(.15+ec*.6,A.currentTime,.05);wet.gain.setTargetAtTime(.15+ec*.7,A.currentTime,.05)}
+function play(){A.resume();clearInterval(tm);on=1;step=0;next=A.currentTime+.05;setFx();tm=setInterval(tick,25);tick()}
+function cells(k,x0,y0,w,cur,col){k.forEach((v,i)=>{x.fillStyle=v?(i==cur?'#222':col):'transparent';x.strokeStyle='#bba';x.lineWidth=1;x.beginPath();x.rect(x0+i*w+1,y0,w-2,w-2);v?x.fill():x.stroke()})}
+function draw(){requestAnimationFrame(draw);const W=innerWidth,H=innerHeight;if(cv.width!=W||cv.height!=H){cv.width=W;cv.height=H}x.clearRect(0,0,W,H);
+const bw=Math.min(W*.8,800)/S,x0=(W-bw*S)/2,y0=H*.3,p=on?((step-1+S)%S):-1;cells(keep,x0,y0,bw,p,'#776');
+if(mode=='change'&&last>=0){x.fillStyle=flash>0?'#c63':'#68a';x.fillRect(x0+last*bw+3,y0+bw+2,bw-6,3)}
+x.fillStyle='#887';x.textAlign='center';x.fillText(!on?'':mode=='change'?'lap '+laps+' · changing · click to keep this':mode=='set'?'playing your '+set.length+' keeps in turn · '+(ix+1)+' of '+set.length:'keep '+(ix+1)+' of '+set.length+' · click to carry on changing',W/2,y0+bw+30);
+const sw=Math.min(6,(W*.8)/S/4|0)+2,cols=Math.max(1,Math.floor(W*.8/(sw*S+12)));set.forEach((k,j)=>{const cx=(W-Math.min(set.length,cols)*(sw*S+12))/2+(j%cols)*(sw*S+12),cy=y0+bw+60+(j/cols|0)*(sw+10);
+cells(k,cx,cy,sw,-1,j==ix&&mode!='change'?'#c63':'#998')})}
+fresh();draw();
+onclick=()=>{if(!on)play();else if(mode=='change'){set.push(keep.slice());ix=set.length-1;mode='held'}else mode='change'};
+onkeydown=e=>{const k=e.code;if(k=='Space'){e.preventDefault();if(on){on=0;clearInterval(tm)}else play()}
+if((k=='ArrowLeft'||k=='ArrowRight')&&set.length){ix=Math.max(0,Math.min(set.length-1,(ix<0?set.length:ix)+(k=='ArrowLeft'?-1:1)));keep=set[ix].slice();mode='held'}
+if(k=='Enter'&&set.length>1)mode=mode=='set'?'held':'set'};
+onpointermove=e=>{ec=1-e.clientY/innerHeight;setFx()};
+async function load(F){const b=await F.arrayBuffer();try{buf=await A.decodeAudioData(b.slice(0))}catch(e){buf=aiff(b)}play()}
+function aiff(b){const v=new DataView(b);let p=12,c,n,w,r,o;while(p+8<=v.byteLength){const id=String.fromCharCode(...new Uint8Array(b,p,4)),z=v.getUint32(p+4);
+if(id=="COMM"){c=v.getInt16(p+8);n=v.getUint32(p+10);w=v.getInt16(p+14)/8;r=v.getUint32(p+18)*2**((v.getUint16(p+16)&32767)-16414)}if(id=="SSND")o=p+16+v.getUint32(p+8);p+=8+z+(z&1)}
+const B=A.createBuffer(c,n,r);for(let k=0;k<c;k++){const d=B.getChannelData(k);for(let i=0;i<n;i++){const q=o+(i*c+k)*w;d[i]=w==1?v.getInt8(q)/128:w==2?v.getInt16(q)/32768:w==3?(v.getInt8(q)*65536+v.getUint16(q+1))/8388608:v.getInt32(q)/2147483648}}return B}
+ondragover=e=>e.preventDefault();ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+</script>

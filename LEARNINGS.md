@@ -24,6 +24,8 @@ Design principles for minimal sample loop players, updated by each daily run.
 19. **Print a layer, not the mix.** Resampling one slowed, effected layer back to the original loop length turns the player into a source of new samples. One depth axis plus one 'keep' key is enough when the effects belong to the layers (017).
 20. **Stopping is a control.** In a generative player, 'it's finished, stop changing' (and 'no, carry on') can be the only decision you make, and it feels like editing rather than watching (018).
 21. **Combine, then cut.** When two ideas work, the next step is to join them and remove everything the join makes unnecessary: 017 merges 013 and 015 and loses the strip, the save, the mute keys and the drawing.
+22. **Keep the decision, not the audio.** A kept pattern is 16 on/off cells, so you can keep every 'yes' for free, and playing the keeps in turn turns collecting into arranging (019).
+23. **Do both, one per ear.** When a generative step has two options, playing one in each ear gives a stereo pair of related loops from one sample. One axis from 'no choices' to 'every choice' sets how far they drift apart (020).
 
 ## Open questions
 - Is a visual (glow, genome, waveform) part of the minimum, or a crutch?
@@ -32,8 +34,9 @@ Design principles for minimal sample loop players, updated by each daily run.
 - What counts as a 'kind' of slice in a real loop? Loudness and brightness work on the built-in sound (016).
 - Should players share one sound between them (one tab plays, another prints)?
 - Is a print of the ×⅛ room layer of a real drum loop a usable pad, or just wash? (017)
-- Should a 'finished' state be kept somewhere (a strip, a saved WAV), so stopping becomes a way of collecting? (018)
+- ~~Should a 'finished' state be kept somewhere (a strip, a saved WAV), so stopping becomes a way of collecting? (018)~~ Keep the pattern, not the audio, and play the keeps in turn (019).
+- Do the two ears of 020 sound like one piece or two on a real Splice loop?
 - How many simultaneous layers of one sample is the limit before it turns to mush? (014 suggests four octaves is fine; 015 tries five, each with its own effect.)
 
 ## Craig's feedback
-_No feedback yet. As of 25 Oct 2026 (run that built 017 and 018), none of the 18 issues (welcome #1 and the 17 feedback issues #2–#19; #13 does not exist) have comments, and there are no notes from Craig in chat since the last run. Daily runs copy feedback here from the issues and note what they changed because of it._
+_No feedback yet. As of 26 Oct 2026 (run that built 019 and 020), none of the 20 issues (welcome #1 and the feedback issues #2–#21; #13 does not exist) have comments, and there are no notes from Craig in chat since the last run. Daily runs copy feedback here from the issues and note what they changed because of it._

@@ -18,4 +18,6 @@ module.exports = {
   '016-kinds.html': { start: [{ move: [500, 500] }, { click: [500, 500] }], after: [{ move: [700, 150] }, { wait: 1500 }] },
   '017-sediment.html': { start: [{ move: [500, 100] }, { click: [500, 100] }], after: [{ move: [500, 650] }, { wait: 800 }, { key: 'Space' }, { wait: 1500 }, { move: [500, 300] }, { key: 'Space' }, { wait: 1200 }, { key: 'Backspace' }, { wait: 300 }] },
   '018-finished.html': { start: [{ move: [500, 300] }, { click: [500, 300] }], after: [{ wait: 4500 }, { click: [500, 300] }, { wait: 2200 }, { click: [500, 300] }] },
+  '019-keeps.html': { start: [{ move: [500, 300] }, { click: [500, 300] }], after: [{ wait: 2200 }, { click: [500, 300] }, { wait: 2200 }, { click: [500, 300] }, { wait: 2200 }, { click: [500, 300] }, { key: 'Enter' }, { wait: 2200 }, { key: 'ArrowLeft' }, { wait: 300 }] },
+  '020-both.html': { start: [{ move: [200, 300] }, { click: [200, 300] }], after: [{ move: [900, 300] }, { wait: 1500 }, { click: [900, 300] }, { wait: 1500 }] },
 };

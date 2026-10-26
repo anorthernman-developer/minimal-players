@@ -272,3 +272,35 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 **Responds to:** No feedback comments yet.
 
 **Next:** Try keeping every 'finished' state, so the moments you said yes become a set you can step back through.
+
+## 26 Oct 2026 · 019 · Keeps
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/019-keeps.html  
+**Size:** 39 lines, 5159 bytes
+
+**What:** Like 018, the loop is cut into 16 slices and one slice comes in or drops out every lap. Clicking means 'yes, this one': the loop holds still, and that pattern is added to a row of small keeps under the main grid. Click again and it carries on changing from there. Left and right arrows step back through everything you kept, and Enter plays the keeps in turn, one per lap, so the moments you said yes become an arrangement. Dropping a new sample keeps the patterns, so a set you collected on the built-in loop can be played on your own Splice loop.
+
+**Why:** This is Player A, my pick for what to do next. 018's devlog ended with 'try keeping every finished state, so the moments you said yes become a set you can step back through', and the open question in LEARNINGS asked whether stopping could become a way of collecting. It joins 018 (stopping is a control, principle 20) with 013's strip of prints (principle 15), following principle 21: combine, then cut. Nothing is rendered or saved to disk; the keeps are just 16 on/off cells each, so the strip costs almost nothing.
+
+**Learned:** Keeping a pattern costs 16 bits, so a whole set of keeps is free, unlike 013's strip of audio prints. Playing the keeps in turn is the first player where your choices, not the random process, decide the form of the piece. Keeping patterns across a new sample separates the arrangement from the sound.
+
+**Responds to:** No feedback comments yet (checked all 20 issues on 26 Oct, and no notes from Craig in chat since the last run), so this follows the 'Next' note from 018 and principles 15, 20 and 21.
+
+**Next:** Let a keep hold a mix of slices from two samples, so dropping a second sound fills the empty cells.
+
+## 26 Oct 2026 · 020 · Both
+
+**Play:** https://anorthernman-developer.github.io/minimal-players/players/020-both.html  
+**Size:** 36 lines, 5172 bytes
+
+**What:** Each of the 16 slices is offered two different ways to change, chosen from reverse, an octave up, an octave down, a four-times stutter, or a rest. The player never picks one. The first goes to your left ear and the second to your right, at the same moment. Moving the pointer right lets more slices face their choice, in a fixed random order, so far left is the plain loop in mono and far right is two different loops, one in each ear, made from the same sample. Click for a new set of choices. The screen shows two rows of 16 letters, the left ear on top and the right ear underneath.
+
+**Why:** This is Player B. The card drawn was 'Faced with a choice, do both.' from Oblique Strategies (Brian Eno and Peter Schmidt). Most generative players make a choice for you every lap (007, 018). This one refuses to: every choice is played both ways, split across the stereo field, and the only control is how many choices there are. It's also the first player in the set that uses stereo on purpose.
+
+**Learned:** Splitting two variations hard left and right turns a single sample into a stereo pair of related loops; the shared slices in the middle keep it sounding like one piece. One axis that goes from 'no choices' to 'every choice' is a smooth way into variation with no randomness while you move (like 016's strictness axis).
+
+**Oblique card drawn:** “Faced with a choice, do both.”
+
+**Responds to:** No feedback comments yet.
+
+**Next:** Try a version where the two ears slowly trade places, so the choice drifts across the head.
