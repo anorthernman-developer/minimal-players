@@ -4,3 +4,16 @@ test/shot-*.png
 test/*.wav
 test/*.aif
 test/results-*.json
+# secrets: never commit keys
+.env
+.env.*
+*.key
+*.pem
+secrets.*
+*.local.json
+# OS and tools
+.DS_Store
+node_modules/
+*.log
+.netlify/
+
