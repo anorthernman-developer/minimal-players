@@ -42,16 +42,16 @@ See [DEVLOG.md](DEVLOG.md) for what each one is and why it exists, and [LEARNING
 ## Feedback → next iteration
 Each player has a **feedback issue** (label `feedback`). Comment there with what worked, what didn't and what to try next. Daily runs read those comments, update `LEARNINGS.md`, and build two new players each day:
 1. one based on what we think the project should do next (from the learnings and feedback), and
-2. one based on a randomly drawn **Oblique Strategies**-style card.
+2. one based on a randomly drawn prompt card (our own wording, inspired by the Oblique Strategies deck).
 
 ## Testing
 `test/run.js` loads every player in headless Chromium. It checks there are no console errors, that the audio context is running, that signal reaches the output, and that a test WAV and a test AIFF load and loop. Results are in `test/results.json`.
 
-Oblique Strategies is by Brian Eno and Peter Schmidt. The cards in 010 are short quotations and paraphrases, used as prompts.
+The prompt cards are our own wording, inspired by the Oblique Strategies deck (1975). No card text from that deck is reproduced.
 ''')
 # DEVLOG
 dl=['# Devlog\n','A dated entry for each player: what it is, why it exists, its size, and what it taught us for the next one.\n']
 for p in P:
     d=p.get('date') or ('21 Oct 2026' if p['id']=='000' else '22 Oct 2026')
-    dl.append(f"## {d} · {p['id']} · {p['name']}\n\n**Play:** {p['page']}  \n**Size:** {p['lines']} lines, {p['bytes']} bytes\n\n**What:** {p['what']}\n\n**Why:** {p['why']}\n\n**Learned:** {p['learned']}\n\n"+(f"**Oblique card drawn:** “{p['card']}”\n\n" if p.get('card') else '')+(f"**Responds to:** {p['responds']}\n\n" if p.get('responds') else '')+f"**Next:** {p['next']}\n")
+    dl.append(f"## {d} · {p['id']} · {p['name']}\n\n**Play:** {p['page']}  \n**Size:** {p['lines']} lines, {p['bytes']} bytes\n\n**What:** {p['what']}\n\n**Why:** {p['why']}\n\n**Learned:** {p['learned']}\n\n"+(f"**Prompt card drawn:** “{p['card']}”\n\n" if p.get('card') else '')+(f"**Responds to:** {p['responds']}\n\n" if p.get('responds') else '')+f"**Next:** {p['next']}\n")
 open('DEVLOG.md','w').write('\n'.join(dl))

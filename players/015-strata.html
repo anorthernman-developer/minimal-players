@@ -1,6 +1,6 @@
 <!doctype html><meta charset=utf-8><title>015 · strata</title>
 <style>html{height:100%;background:#0a0908;color:#776;font:13px monospace;cursor:crosshair;user-select:none}body{margin:0;overflow:hidden}canvas{position:fixed;inset:0}p{position:fixed;left:0;right:0;text-align:center;margin:0;bottom:6vh}</style>
-<canvas></canvas><p>click to play · left/right = which layer · up = open the others in · 1–5 = mute a layer · drop a sound</p>
+<canvas role=img aria-label="visuals that follow the sound"></canvas><p>click to play · left/right = which layer · up = open the others in · 1–5 = mute a layer · drop a sound</p>
 <script>
 // Strata: one loop at five speeds (×2 … ×⅛), and each speed gets its own effect, so the layers sound like different instruments made from the same sample.
 const A=new AudioContext(),R=A.sampleRate,cv=document.querySelector('canvas'),x=cv.getContext('2d'),out=A.createDynamicsCompressor();out.connect(A.destination);

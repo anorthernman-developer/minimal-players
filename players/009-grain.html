@@ -1,6 +1,6 @@
 <!doctype html><meta charset=utf-8><title>009 · grain</title>
 <style>html,body{margin:0;height:100%;background:#000;overflow:hidden;cursor:crosshair}canvas{display:block}p{position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#555;font:12px monospace;margin:0;pointer-events:none}</style>
-<canvas id=c></canvas><p>click to start · x = where in the sound · y = grain size · hold = scatter + shimmer · space = stop · drop a sound</p>
+<canvas role=img aria-label="visuals that follow the sound" id=c></canvas><p>click to start · x = where in the sound · y = grain size · hold = scatter + shimmer · space = stop · drop a sound</p>
 <script>
 // Granular in under 100 lines: a cloud of short Hann-windowed grains read from one position in the sample.
 const A=new AudioContext(),R=A.sampleRate,N=(t,...a)=>a.reduce((n,b)=>(n.connect(b),b),t),X=c.getContext('2d');

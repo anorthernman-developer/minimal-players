@@ -104,9 +104,9 @@
   "slug": "oblique",
   "name": "Oblique",
   "how": "Click to start and draw a card. A new card is drawn every 4 loops. Drop a sound.",
-  "what": "The loop is played by a deck of Oblique Strategies-style cards (after Brian Eno & Peter Schmidt). Each card is a concrete, audible instruction: 'Reverse' flips the loop, 'Emphasise the flaws' bit-crushes, 'Repetition is a form of change' halves the loop, 'Use an old idea' returns to an earlier state, 'Do nothing for as long as possible' freezes changes for 12 loops.",
+  "what": "The loop is played by a deck of our own prompt cards, inspired by the Oblique Strategies deck (1975). Each card is a concrete, audible instruction: 'Play it backwards' flips the loop, 'Make the flaws louder' bit-crushes, 'Copy it, slightly wrong' halves the loop, 'Go back' returns to an earlier state, 'Wait. Then wait longer' freezes changes for 12 loops.",
   "why": "Turns a creative-block tool into a performer. The only UI is the card, a sentence. It's a different kind of generative from 007: semantic instead of random, and each change has a reason you can read.",
-  "learned": "Words make generative changes understandable. History ('Use an old idea') gives the system memory. It's the biggest file (5 KB), because each card is code.",
+  "learned": "Words make generative changes understandable. History ('Go back') gives the system memory. It's the biggest file (5 KB), because each card is code.",
   "next": "Daily runs: one player from our own reasoning, one from a random card."
  },
  {
@@ -128,10 +128,10 @@
   "date": "22 Oct 2026",
   "how": "Click to play/stop. Pointer up = bend time more, left/right = how many bends per loop (1, 2, 3, 4, 6 or 8). Drop a sound.",
   "what": "Each loop still lasts exactly as long, but time inside it is bent. Playback speed follows 1 + a·sin(2πkt/D), which averages to exactly 1, so the loop rushes and drags (with tape-style pitch bends) but always lands back on the downbeat. The screen draws the time map, sample position against clock time, so you can see the bend, with a playhead dot moving along it. A quarter-loop echo plays the bent sound against straight time.",
-  "why": "This is Player B. The card drawn was 'Distorting time.' from Oblique Strategies (Brian Eno and Peter Schmidt). Taken literally, it asks what happens if time inside the loop is the thing you play. Keeping the average speed at 1 is what makes it musical rather than broken: it is swing and wow taken to an extreme, and it never drifts out of sync.",
+  "why": "This is Player B. The prompt drawn was 'Bend time.' (our own card, inspired by the Oblique Strategies deck). Taken literally, it asks what happens if time inside the loop is the thing you play. Keeping the average speed at 1 is what makes it musical rather than broken: it is swing and wow taken to an extreme, and it never drifts out of sync.",
   "learned": "Bending time while keeping the loop length gives you groove control with no tempo detection. Drawing the time map makes an abstract idea visible at a glance (principle 4 again).",
   "next": "Try a sync mode where 008's second loop gets bent against a straight first loop.",
-  "card": "Distorting time.",
+  "card": "Bend time.",
   "responds": "No feedback comments yet."
  },
  {
@@ -153,10 +153,10 @@
   "date": "23 Oct 2026",
   "how": "Click to play/stop. Pointer left/right = which speed you listen from (×2, ×1, ×½, ×¼), up = let the other speeds bleed in. Drop a sound.",
   "what": "The same loop plays at four speeds at once, ×2, ×1, ×½ and ×¼, like tape running at different speeds, so each is an octave apart and twice as long as the one above. They all start together, so they meet on the downbeat every four loops. Moving left and right chooses which speed you're listening from, moving up widens the focus so the neighbouring speeds come in too, and the slow layers feed a long, dark echo. The screen shows four orbits with a dot going round each at its own speed.",
-  "why": "This is Player B. The card drawn was 'Work at a different speed.' from Oblique Strategies (Brian Eno and Peter Schmidt). 012 already bent time inside one loop, so this takes the card more literally: several speeds of the same material working side by side, in the spirit of Eno's own tape-loop pieces. Using powers of two (principle 9) keeps everything in sync with no tempo detection.",
+  "why": "This is Player B. The prompt drawn was 'Change speed.' (our own card, inspired by the Oblique Strategies deck). 012 already bent time inside one loop, so this takes the card more literally: several speeds of the same material working side by side, in the spirit of Eno's own tape-loop pieces. Using powers of two (principle 9) keeps everything in sync with no tempo detection.",
   "learned": "Octave-related speeds of one sample line up as top, middle, bass and pad versions of the same material, so in principle they read as an arrangement rather than a mess. A focus control (which layer, and how wide) is a small mixer: two axes for four channels.",
   "next": "Try letting each speed have its own effect, and adding ×⅛ for very slow drones.",
-  "card": "Work at a different speed.",
+  "card": "Change speed.",
   "responds": "No feedback comments yet."
  },
  {
@@ -178,10 +178,10 @@
   "date": "24 Oct 2026",
   "how": "Click to play/stop. Pointer up = stricter, so fewer kinds survive; pointer left/right = how much echo fills the gaps. Drop a sound.",
   "what": "The loop is cut into 16 slices, and each slice is sorted into a 'kind' by how loud and how bright it is. Only the first slice of each kind plays. Every later slice of the same kind falls silent, and an echo of what came before fills the gap. At the bottom of the screen all 16 slices play; as you move up, the player decides more slices are 'the same' and keeps fewer, until only two or three remain. The loop length never changes, so it stays in time. The screen shows the 16 slices as coloured blocks, filled if they play and outlined if they've been removed.",
-  "why": "This is Player B. The card drawn was 'Only one element of each kind.' from Oblique Strategies (Brian Eno and Peter Schmidt). Most loops are made of repeats (the same kick, the same hat), so the most literal reading of the card is to throw the repeats away and hear what's left. Keeping silences where the repeats were, rather than closing up the gaps, means the groove survives as a skeleton and the echo becomes the instrument.",
+  "why": "This is Player B. The prompt drawn was 'One of each, no more.' (our own card, inspired by the Oblique Strategies deck). Most loops are made of repeats (the same kick, the same hat), so the most literal reading of the card is to throw the repeats away and hear what's left. Keeping silences where the repeats were, rather than closing up the gaps, means the groove survives as a skeleton and the echo becomes the instrument.",
   "learned": "Subtraction can be generative: one 'strictness' axis on any sample gives a smooth path from the full loop to a sparse skeleton, with no randomness. Very crude features (loudness and zero crossings) were enough to tell a kick from a hat from a note on the built-in loop; real Splice loops may need something better.",
   "next": "Try choosing which slice represents each kind (the loudest, or a random one each loop) instead of always the first.",
-  "card": "Only one element of each kind.",
+  "card": "One of each, no more.",
   "responds": "No feedback comments yet."
  },
  {
@@ -203,9 +203,9 @@
   "date": "25 Oct 2026",
   "how": "Click to play. After that, click when it's finished and it stays exactly as it is; click again if it isn't, and it carries on changing. Pointer up = more echo. Space stops. Drop a sound.",
   "what": "The loop is cut into 16 slices and starts with four of them playing. Every time round, one slice comes in or drops out (it adds while the loop is sparse, takes away when it's full, and otherwise either), and an echo fills the gaps. It never finishes on its own. The card's question stays on the screen, and answering it is the only decision you make: click and the loop freezes as it is, the card turns to 'Finished.' and it tells you how many laps it took. Click again and it starts changing from there. The screen shows the 16 slices, filled if playing, with a mark under the slice that just changed.",
-  "why": "This is Player B. The card drawn was 'Is it finished?' from Oblique Strategies (Brian Eno and Peter Schmidt). The card is a question you ask about a piece, so the player turns that question into the whole interface: the music arranges itself, slowly, and your only job is to recognise when to stop. It flips 007 (Drift), where you leave it alone, and 016 (Kinds), where you choose how much to remove.",
+  "why": "This is Player B. The prompt drawn was 'Done yet?' (our own card, inspired by the Oblique Strategies deck). The card is a question you ask about a piece, so the player turns that question into the whole interface: the music arranges itself, slowly, and your only job is to recognise when to stop. It flips 007 (Drift), where you leave it alone, and 016 (Kinds), where you choose how much to remove.",
   "learned": "Deciding when to stop is a musical control in its own right. A generative player with a single 'stop changing' answer feels like editing rather than watching. One change per lap is slow enough to hear each decision, and 'four slices on the beat' is a good home to start from (principle 8).",
-  "card": "Is it finished?",
+  "card": "Done yet?",
   "next": "Try keeping every 'finished' state, so the moments you said yes become a set you can step back through.",
   "responds": "No feedback comments yet."
  },
@@ -226,10 +226,10 @@
   "slug": "both",
   "name": "Both",
   "date": "26 Oct 2026",
-  "card": "Faced with a choice, do both.",
+  "card": "Can’t choose? Take both.",
   "how": "Click to play (again for new choices), left/right = how many slices do both, up/down echo. Best on headphones",
   "what": "Each of the 16 slices is offered two different ways to change, chosen from reverse, an octave up, an octave down, a four-times stutter, or a rest. The player never picks one. The first goes to your left ear and the second to your right, at the same moment. Moving the pointer right lets more slices face their choice, in a fixed random order, so far left is the plain loop in mono and far right is two different loops, one in each ear, made from the same sample. Click for a new set of choices. The screen shows two rows of 16 letters, the left ear on top and the right ear underneath.",
-  "why": "This is Player B. The card drawn was 'Faced with a choice, do both.' from Oblique Strategies (Brian Eno and Peter Schmidt). Most generative players make a choice for you every lap (007, 018). This one refuses to: every choice is played both ways, split across the stereo field, and the only control is how many choices there are. It's also the first player in the set that uses stereo on purpose.",
+  "why": "This is Player B. The prompt drawn was 'Can’t choose? Take both.' (our own card, inspired by the Oblique Strategies deck). Most generative players make a choice for you every lap (007, 018). This one refuses to: every choice is played both ways, split across the stereo field, and the only control is how many choices there are. It's also the first player in the set that uses stereo on purpose.",
   "learned": "Splitting two variations hard left and right turns a single sample into a stereo pair of related loops; the shared slices in the middle keep it sounding like one piece. One axis that goes from 'no choices' to 'every choice' is a smooth way into variation with no randomness while you move (like 016's strictness axis).",
   "responds": "No feedback comments yet.",
   "next": "Try a version where the two ears slowly trade places, so the choice drifts across the head."

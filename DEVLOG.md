@@ -122,7 +122,7 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 ## 22 Oct 2026 · 009 · Grain
 
 **Play:** https://anorthernman-developer.github.io/minimal-players/players/009-grain.html  
-**Size:** 32 lines, 3684 bytes
+**Size:** 32 lines, 3736 bytes
 
 **What:** A granular player in under 40 lines: a cloud of Hann-windowed grains read from the pointer's position, into a long reverb. The waveform is drawn with live grain marks.
 
@@ -135,13 +135,13 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 ## 22 Oct 2026 · 010 · Oblique
 
 **Play:** https://anorthernman-developer.github.io/minimal-players/players/010-oblique.html  
-**Size:** 38 lines, 5164 bytes
+**Size:** 38 lines, 5076 bytes
 
-**What:** The loop is played by a deck of Oblique Strategies-style cards (after Brian Eno & Peter Schmidt). Each card is a concrete, audible instruction: 'Reverse' flips the loop, 'Emphasise the flaws' bit-crushes, 'Repetition is a form of change' halves the loop, 'Use an old idea' returns to an earlier state, 'Do nothing for as long as possible' freezes changes for 12 loops.
+**What:** The loop is played by a deck of our own prompt cards, inspired by the Oblique Strategies deck (1975). Each card is a concrete, audible instruction: 'Play it backwards' flips the loop, 'Make the flaws louder' bit-crushes, 'Copy it, slightly wrong' halves the loop, 'Go back' returns to an earlier state, 'Wait. Then wait longer' freezes changes for 12 loops.
 
 **Why:** Turns a creative-block tool into a performer. The only UI is the card, a sentence. It's a different kind of generative from 007: semantic instead of random, and each change has a reason you can read.
 
-**Learned:** Words make generative changes understandable. History ('Use an old idea') gives the system memory. It's the biggest file (5 KB), because each card is code.
+**Learned:** Words make generative changes understandable. History ('Go back') gives the system memory. It's the biggest file (5 KB), because each card is code.
 
 **Next:** Daily runs: one player from our own reasoning, one from a random card.
 
@@ -163,15 +163,15 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 ## 22 Oct 2026 · 012 · Warp
 
 **Play:** https://anorthernman-developer.github.io/minimal-players/players/012-warp.html  
-**Size:** 28 lines, 3843 bytes
+**Size:** 28 lines, 3905 bytes
 
 **What:** Each loop still lasts exactly as long, but time inside it is bent. Playback speed follows 1 + a·sin(2πkt/D), which averages to exactly 1, so the loop rushes and drags (with tape-style pitch bends) but always lands back on the downbeat. The screen draws the time map, sample position against clock time, so you can see the bend, with a playhead dot moving along it. A quarter-loop echo plays the bent sound against straight time.
 
-**Why:** This is Player B. The card drawn was 'Distorting time.' from Oblique Strategies (Brian Eno and Peter Schmidt). Taken literally, it asks what happens if time inside the loop is the thing you play. Keeping the average speed at 1 is what makes it musical rather than broken: it is swing and wow taken to an extreme, and it never drifts out of sync.
+**Why:** This is Player B. The prompt drawn was 'Bend time.' (our own card, inspired by the Oblique Strategies deck). Taken literally, it asks what happens if time inside the loop is the thing you play. Keeping the average speed at 1 is what makes it musical rather than broken: it is swing and wow taken to an extreme, and it never drifts out of sync.
 
 **Learned:** Bending time while keeping the loop length gives you groove control with no tempo detection. Drawing the time map makes an abstract idea visible at a glance (principle 4 again).
 
-**Oblique card drawn:** “Distorting time.”
+**Prompt card drawn:** “Bend time.”
 
 **Responds to:** No feedback comments yet.
 
@@ -195,15 +195,15 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 ## 23 Oct 2026 · 014 · Speeds
 
 **Play:** https://anorthernman-developer.github.io/minimal-players/players/014-speeds.html  
-**Size:** 28 lines, 3800 bytes
+**Size:** 28 lines, 3855 bytes
 
 **What:** The same loop plays at four speeds at once, ×2, ×1, ×½ and ×¼, like tape running at different speeds, so each is an octave apart and twice as long as the one above. They all start together, so they meet on the downbeat every four loops. Moving left and right chooses which speed you're listening from, moving up widens the focus so the neighbouring speeds come in too, and the slow layers feed a long, dark echo. The screen shows four orbits with a dot going round each at its own speed.
 
-**Why:** This is Player B. The card drawn was 'Work at a different speed.' from Oblique Strategies (Brian Eno and Peter Schmidt). 012 already bent time inside one loop, so this takes the card more literally: several speeds of the same material working side by side, in the spirit of Eno's own tape-loop pieces. Using powers of two (principle 9) keeps everything in sync with no tempo detection.
+**Why:** This is Player B. The prompt drawn was 'Change speed.' (our own card, inspired by the Oblique Strategies deck). 012 already bent time inside one loop, so this takes the card more literally: several speeds of the same material working side by side, in the spirit of Eno's own tape-loop pieces. Using powers of two (principle 9) keeps everything in sync with no tempo detection.
 
 **Learned:** Octave-related speeds of one sample line up as top, middle, bass and pad versions of the same material, so in principle they read as an arrangement rather than a mess. A focus control (which layer, and how wide) is a small mixer: two axes for four channels.
 
-**Oblique card drawn:** “Work at a different speed.”
+**Prompt card drawn:** “Change speed.”
 
 **Responds to:** No feedback comments yet.
 
@@ -212,7 +212,7 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 ## 24 Oct 2026 · 015 · Strata
 
 **Play:** https://anorthernman-developer.github.io/minimal-players/players/015-strata.html  
-**Size:** 39 lines, 4546 bytes
+**Size:** 39 lines, 4598 bytes
 
 **What:** 014's idea of one loop at several speeds, taken one step further: five speeds (×2, ×1, ×½, ×¼ and the new ×⅛) and each speed has its own effect. ×2 goes through a highpass and sits to the left, ×1 stays dry in the middle, ×½ is soft-clipped and darkened, ×¼ feeds a dark echo on the right, and ×⅛ only goes into a long reverb, so it becomes a slow drone. The layers meet on the downbeat every eight loops. Number keys mute a layer.
 
@@ -227,15 +227,15 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 ## 24 Oct 2026 · 016 · Kinds
 
 **Play:** https://anorthernman-developer.github.io/minimal-players/players/016-kinds.html  
-**Size:** 34 lines, 4683 bytes
+**Size:** 34 lines, 4742 bytes
 
 **What:** The loop is cut into 16 slices, and each slice is sorted into a 'kind' by how loud and how bright it is. Only the first slice of each kind plays. Every later slice of the same kind falls silent, and an echo of what came before fills the gap. At the bottom of the screen all 16 slices play; as you move up, the player decides more slices are 'the same' and keeps fewer, until only two or three remain. The loop length never changes, so it stays in time. The screen shows the 16 slices as coloured blocks, filled if they play and outlined if they've been removed.
 
-**Why:** This is Player B. The card drawn was 'Only one element of each kind.' from Oblique Strategies (Brian Eno and Peter Schmidt). Most loops are made of repeats (the same kick, the same hat), so the most literal reading of the card is to throw the repeats away and hear what's left. Keeping silences where the repeats were, rather than closing up the gaps, means the groove survives as a skeleton and the echo becomes the instrument.
+**Why:** This is Player B. The prompt drawn was 'One of each, no more.' (our own card, inspired by the Oblique Strategies deck). Most loops are made of repeats (the same kick, the same hat), so the most literal reading of the card is to throw the repeats away and hear what's left. Keeping silences where the repeats were, rather than closing up the gaps, means the groove survives as a skeleton and the echo becomes the instrument.
 
 **Learned:** Subtraction can be generative: one 'strictness' axis on any sample gives a smooth path from the full loop to a sparse skeleton, with no randomness. Very crude features (loudness and zero crossings) were enough to tell a kick from a hat from a note on the built-in loop; real Splice loops may need something better.
 
-**Oblique card drawn:** “Only one element of each kind.”
+**Prompt card drawn:** “One of each, no more.”
 
 **Responds to:** No feedback comments yet.
 
@@ -259,15 +259,15 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 ## 25 Oct 2026 · 018 · Finished?
 
 **Play:** https://anorthernman-developer.github.io/minimal-players/players/018-finished.html  
-**Size:** 35 lines, 4731 bytes
+**Size:** 35 lines, 4787 bytes
 
 **What:** The loop is cut into 16 slices and starts with four of them playing. Every time round, one slice comes in or drops out (it adds while the loop is sparse, takes away when it's full, and otherwise either), and an echo fills the gaps. It never finishes on its own. The card's question stays on the screen, and answering it is the only decision you make: click and the loop freezes as it is, the card turns to 'Finished.' and it tells you how many laps it took. Click again and it starts changing from there. The screen shows the 16 slices, filled if playing, with a mark under the slice that just changed.
 
-**Why:** This is Player B. The card drawn was 'Is it finished?' from Oblique Strategies (Brian Eno and Peter Schmidt). The card is a question you ask about a piece, so the player turns that question into the whole interface: the music arranges itself, slowly, and your only job is to recognise when to stop. It flips 007 (Drift), where you leave it alone, and 016 (Kinds), where you choose how much to remove.
+**Why:** This is Player B. The prompt drawn was 'Done yet?' (our own card, inspired by the Oblique Strategies deck). The card is a question you ask about a piece, so the player turns that question into the whole interface: the music arranges itself, slowly, and your only job is to recognise when to stop. It flips 007 (Drift), where you leave it alone, and 016 (Kinds), where you choose how much to remove.
 
 **Learned:** Deciding when to stop is a musical control in its own right. A generative player with a single 'stop changing' answer feels like editing rather than watching. One change per lap is slow enough to hear each decision, and 'four slices on the beat' is a good home to start from (principle 8).
 
-**Oblique card drawn:** “Is it finished?”
+**Prompt card drawn:** “Done yet?”
 
 **Responds to:** No feedback comments yet.
 
@@ -276,7 +276,7 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 ## 26 Oct 2026 · 019 · Keeps
 
 **Play:** https://anorthernman-developer.github.io/minimal-players/players/019-keeps.html  
-**Size:** 39 lines, 5159 bytes
+**Size:** 39 lines, 5211 bytes
 
 **What:** Like 018, the loop is cut into 16 slices and one slice comes in or drops out every lap. Clicking means 'yes, this one': the loop holds still, and that pattern is added to a row of small keeps under the main grid. Click again and it carries on changing from there. Left and right arrows step back through everything you kept, and Enter plays the keeps in turn, one per lap, so the moments you said yes become an arrangement. Dropping a new sample keeps the patterns, so a set you collected on the built-in loop can be played on your own Splice loop.
 
@@ -291,15 +291,15 @@ A dated entry for each player: what it is, why it exists, its size, and what it 
 ## 26 Oct 2026 · 020 · Both
 
 **Play:** https://anorthernman-developer.github.io/minimal-players/players/020-both.html  
-**Size:** 36 lines, 5172 bytes
+**Size:** 36 lines, 5237 bytes
 
 **What:** Each of the 16 slices is offered two different ways to change, chosen from reverse, an octave up, an octave down, a four-times stutter, or a rest. The player never picks one. The first goes to your left ear and the second to your right, at the same moment. Moving the pointer right lets more slices face their choice, in a fixed random order, so far left is the plain loop in mono and far right is two different loops, one in each ear, made from the same sample. Click for a new set of choices. The screen shows two rows of 16 letters, the left ear on top and the right ear underneath.
 
-**Why:** This is Player B. The card drawn was 'Faced with a choice, do both.' from Oblique Strategies (Brian Eno and Peter Schmidt). Most generative players make a choice for you every lap (007, 018). This one refuses to: every choice is played both ways, split across the stereo field, and the only control is how many choices there are. It's also the first player in the set that uses stereo on purpose.
+**Why:** This is Player B. The prompt drawn was 'Can’t choose? Take both.' (our own card, inspired by the Oblique Strategies deck). Most generative players make a choice for you every lap (007, 018). This one refuses to: every choice is played both ways, split across the stereo field, and the only control is how many choices there are. It's also the first player in the set that uses stereo on purpose.
 
 **Learned:** Splitting two variations hard left and right turns a single sample into a stereo pair of related loops; the shared slices in the middle keep it sounding like one piece. One axis that goes from 'no choices' to 'every choice' is a smooth way into variation with no randomness while you move (like 016's strictness axis).
 
-**Oblique card drawn:** “Faced with a choice, do both.”
+**Prompt card drawn:** “Can’t choose? Take both.”
 
 **Responds to:** No feedback comments yet.
 

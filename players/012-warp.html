@@ -1,6 +1,6 @@
 <!doctype html><meta charset=utf-8><title>012 · warp</title>
 <style>html{height:100%;background:#08090b;color:#778;font:13px monospace;cursor:crosshair;user-select:none}body{margin:0;overflow:hidden}canvas{position:fixed;inset:0}p{position:fixed;left:0;right:0;text-align:center;margin:0}#q{top:7vh;color:#ddd;font:italic 22px Georgia,serif}#q small{display:block;font:11px monospace;color:#556;margin-top:6px}#h{bottom:6vh}</style>
-<canvas></canvas><p id=q>“Distorting time.”<small>Oblique Strategies · Brian Eno &amp; Peter Schmidt</small></p><p id=h>click to play · up = bend time · left/right = how many bends · drop a sound</p>
+<canvas role=img aria-label="visuals that follow the sound"></canvas><p id=q>“Bend time.”<small>our own prompt card, inspired by the Oblique Strategies deck (1975)</small></p><p id=h>click to play · up = bend time · left/right = how many bends · drop a sound</p>
 <script>
 // Warp: every loop still lasts exactly as long, but time inside it is bent. Playback speed = 1 + a·sin(2πkt/D), which averages to 1, so the loop never drifts.
 const A=new AudioContext(),R=A.sampleRate,cv=document.querySelector('canvas'),x=cv.getContext('2d'),out=A.createDynamicsCompressor();out.connect(A.destination);
